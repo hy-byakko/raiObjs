@@ -1,0 +1,36 @@
+.loginbgimage { 
+   background: url(../images/New_toplogo.background.png );
+   background-repeat: repeat-x; 
+}
+
+.icon-reset {
+    background-image: url(../images/stop.png) !important;
+}
+
+.icon-Change {
+    background-image: url(../images/edit.png) !important;
+}
+
+.icon-add {
+    background-image: url(../images/add.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/delete.png) !important;
+}
+
+.icon-search {
+    background-image: url(../images/search.png) !important;
+}
+
+.icon-export {
+    background-image: url(../images/export.gif) !important;
+}
+
+.icon-print {
+    background-image: url(../images/mprint.gif) !important;
+}
+
+.icon-view {
+    background-image: url(../images/view.png) !important;
+}
