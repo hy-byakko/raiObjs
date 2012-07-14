@@ -8,7 +8,7 @@ Ext.define('Vmoss.controller.Vmoss', {
     ],
     
     init: function() {
-        Vmoss.tool.Base.log('Controller running.');
+        Vmoss.Tool.log('Controller running.');
 
         var me = this;
 

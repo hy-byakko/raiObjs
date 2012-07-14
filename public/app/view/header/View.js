@@ -8,7 +8,7 @@
     baseCls:'my-panel-no-border',
 
     initComponent:function () {
-        Vmoss.tool.Base.log('Header running.');
+        Vmoss.Tool.log('Header running.');
 
         Ext.applyIf(this, {
             html:"<img src='/images/New_toplogo.png'>",

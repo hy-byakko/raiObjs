@@ -2,9 +2,14 @@ Ext.define('Vmoss.lib.CModel', {
     extend:'Ext.data.Model',
 
     constructor:function () {
-        Vmoss.tool.Base.log('CModel running.');
+        Vmoss.Tool.log('CModel running.');
 
         var me = this;
+
+// 不使用此方法的原因是model生成非常频繁 每次都调用此方法会造成性能损失
+//        Vmoss.Tool.featureCollect(me, {
+//            scan: true
+//        });
 
         me.addEvents({
             afterset:true,
@@ -51,7 +56,10 @@ Ext.define('Vmoss.lib.CModel', {
 
 //返回指定feature的fieldExtend对象(默认的fieldsExtend与feature内额外属性进行merge).
     getFeatureExtend:function (field, feature) {
-        return Ext.Object.merge(this._getListExtend(field, this['fieldsExtend']), this._getListExtend(field, this.getFeatureList(feature)));
+        return Ext.merge(
+            this._getListExtend(field, this['fieldsExtend']),
+            this._getListExtend(field, this.getFeatureList(feature))
+        );
     },
 
 //返回指定list内的fieldExtend对象.
@@ -59,9 +67,14 @@ Ext.define('Vmoss.lib.CModel', {
         if (!list) {
             return;
         }
+//此处返回的对象可能被修改 因此返回一个原对象的备份
         for (var i = 0, length = list.length; i < length; i++) {
-            if (field == list[i].field) {
-                return list[i];
+            if (field === list[i].field) {
+                return Vmoss.Tool.copy(list[i]);
+            }
+            else if (field === list[i].ref){
+                list[i].ori = list[i].field;
+                return Vmoss.Tool.copy(list[i]);
             }
         }
     },
@@ -76,7 +89,7 @@ Ext.define('Vmoss.lib.CModel', {
         var me = this;
 
         if (options.fireResponse) {
-            Vmoss.tool.Base.function_merge(options.callback, function (options, success, response) {
+            Vmoss.Tool.function_merge(options.callback, function (options, success, response) {
                 me.fireEvent('response', me, response);
             });
             options.fireResponse = true;
@@ -137,7 +150,7 @@ Ext.define('Vmoss.lib.CModel', {
             return false
         }
         Ext.each(obj.bindItems, function (item) {
-            if (Vmoss.tool.Base.eqlObject(item, bindItem, {
+            if (Vmoss.Tool.eqlObject(item, bindItem, {
                 handle:{}
             })) {
                 return true;

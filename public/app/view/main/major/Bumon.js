@@ -4,10 +4,10 @@ Ext.define('Vmoss.view.main.major.Bumon', {
     instanceLabel: '部门',
 
     searchFeature:[
-        {field:'cd', vtype:'alphanum', xtype:'textfield', maxLength:4},
-        {field:'name', xtype:'textfield', maxLength:30},
+        {field:'bumonCd', vtype:'alphanum', xtype:'textfield', maxLength:4},
+        {field:'bumonMei', xtype:'textfield', maxLength:30},
         {
-            field:'kindId',
+            field:'bumonlevelId',
             xtype:'ccombo',
             dispatch:'get_bumon_data',
 
@@ -18,8 +18,8 @@ Ext.define('Vmoss.view.main.major.Bumon', {
     ],
 
     gridFeature:[
-        'cd',
-        'name',
+        'bumonCd',
+        'bumonMei',
         'kind',
         'parent',
         'yubinNo',
@@ -29,10 +29,10 @@ Ext.define('Vmoss.view.main.major.Bumon', {
     ],
 
     benchFeature:[
-        'cd',
-        'name',
+        'bumonCd',
+        'bumonMei',
         {
-            field:'kindId',
+            field:'bumonlevelId',
             xtype:'ccombo',
             dispatch:'get_bumon_data',
 
@@ -40,7 +40,18 @@ Ext.define('Vmoss.view.main.major.Bumon', {
             selectOnFocus:true,
             editable:true
         },
-        'parent',
+        {
+            field:'parentId',
+            xtype:'ccombo',
+            dispatch:'get_parent_data',
+            requestParams:[
+                'id'
+            ],
+
+            forceSelection:true,
+            selectOnFocus:true,
+            editable:true
+        },
         'yubinNo',
         'telNo',
         'faxNo',

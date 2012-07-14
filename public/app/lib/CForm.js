@@ -3,13 +3,14 @@
  *  bind: Model         //绑定一个model的实例, 并以该model实例创建自身field
  *  modelField: Array   //如果指定的情况会依照此数组内的属性创建field, 并且添加model内相应的额外属性
  *  feature: String     //指定的情况下会额外遍历model内(例: 'grid' + 'Feature')属性, 添加到field创建
+ *  fireUpdate: String  //该事件触发时更新对象, 默认为beforeaction
  */
 //Todo 绑定可能会造成无法进行垃圾回收, 注意释放内存, 以免造成泄漏
 Ext.define('Vmoss.lib.CForm', {
     extend:'Ext.form.Panel',
 
     initComponent:function () {
-        Vmoss.tool.Base.log('CForm running.');
+        Vmoss.Tool.log('CForm running.');
         var me = this;
 
         //添加vtype——password,验证修改密码与确认密码要一致
@@ -66,18 +67,31 @@ Ext.define('Vmoss.lib.CForm', {
         }
     },
 
+//以所绑定的实例为基础创建相应的field
     getModelField:function (options) {
         options = options || {};
-        var instance = options.instance,
+        var me = this,
+            instance = options.instance,
             field = options.field,
             feature = options.feature,
             fieldKey = (Ext.typeOf(field) == 'string') ? field : (field.name || field.field),
-            config = instance.getFeatureExtend(fieldKey, feature),
-            item = {};
+            config = Vmoss.Tool.copy(instance.getFeatureExtend(fieldKey, feature)),
+            item = {},
+            listener = {
+                scope:me
+            },
+            event = me.fireUpdate || 'beforeaction';
 
-        if(Ext.typeOf(field) !== 'string') {
-            config = Ext.Object.mergeIf(field, config);
+//备份CForm自身所提供的modelField属性, 并使之与model内的属性合并
+        if (Ext.typeOf(field) !== 'string') {
+            config = Ext.mergeIf(Vmoss.Tool.copy(field), config);
         }
+
+//为config添加创建他的实例链接
+        config = Ext.mergeIf(config, {
+            modelInstance: instance
+        });
+
         if (config) {
             for (var attr in config) {
                 switch (attr) {
@@ -99,12 +113,11 @@ Ext.define('Vmoss.lib.CForm', {
             };
         }
 
+        listener[event] = this.modelUpdate;
+
         Ext.Object.mergeIf(item, {
             parent: this,
-            listeners:{
-                blur: this.modelUpdate,
-                scope: this
-            }
+            listeners: listener
         });
 
         return item;

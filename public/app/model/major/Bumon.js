@@ -3,11 +3,12 @@ Ext.define('Vmoss.model.major.Bumon', {
 
     fields:[
         'id',
-        {name:'cd', type:'string'},
-        {name:'name', type:'string'},
-        {name:'kindId', type:'string'},
-        {name:'kind', type:'string'},
-        {name:'parent', type:'string'},
+        {name:'bumonCd', type:'string'},
+        {name:'bumonMei', type:'string'},
+        {name:'bumonlevelId', type:'string'},
+        {name:'kind', type:'string', persist: false},
+        {name:'parentId', type:'string'},
+        {name:'parent', type:'string', persist: false},
         {name:'yubinNo', type:'string'},
         {name:'telNo', type:'string'},
         {name:'faxNo', type:'string'},
@@ -20,10 +21,10 @@ Ext.define('Vmoss.model.major.Bumon', {
     },
 
     fieldsExtend:[
-        {field:'cd', label:'部门编号'},
-        {field:'name', label:'部门名称'},
-        {field:'kind', label:'部门类别', ref:'kindID'},
-        {field:'parent', label:'上级部门'},
+        {field:'bumonCd', label:'部门编号'},
+        {field:'bumonMei', label:'部门名称'},
+        {field:'kind', label:'部门类别', ref:'bumonlevelId'},
+        {field:'parent', label:'上级部门', ref:'parentId'},
         {field:'yubinNo', label:'邮编'},
         {field:'telNo', label:'电话'},
         {field:'faxNo', label:'传真'},

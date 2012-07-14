@@ -17,7 +17,7 @@ Ext.define('Vmoss.view.main.button.GridDestroy', {
                 }
             })
         } else {
-            Vmoss.tool.Base.errorMessage('请选择' + grid.instanceLabel + '!')
+            Vmoss.Tool.errorMessage('请选择' + grid.instanceLabel + '!')
         }
     },
 

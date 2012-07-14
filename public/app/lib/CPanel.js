@@ -3,7 +3,7 @@ Ext.define('Vmoss.lib.CPanel', {
     extend:'Ext.panel.Panel',
 
     constructor:function (config) {
-        Vmoss.tool.Base.log('CPanel running.');
+        Vmoss.Tool.log('CPanel running.');
         this.callParent(arguments);
     }
 

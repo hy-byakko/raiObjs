@@ -1,8 +1,13 @@
+/**
+ * ExtendConfig:
+ *  dispatch: String,
+ *  url: String
+ */
 Ext.define('Vmoss.lib.CStore', {
     extend:'Ext.data.Store',
 
     constructor:function (config) {
-        Vmoss.tool.Base.log('CStore running.');
+        Vmoss.Tool.log('CStore running.');
         var me = this,
             options = {};
 
@@ -23,7 +28,7 @@ Ext.define('Vmoss.lib.CStore', {
     },
 
     load:function (options) {
-        Vmoss.tool.Base.log('Store loads here.');
+        Vmoss.Tool.log('Store loads here.');
 
         if(!options) {
             options = {};

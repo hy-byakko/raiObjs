@@ -20,7 +20,7 @@ Ext.define('Vmoss.view.Viewport', {
     ],
 
     initComponent:function () {
-        Vmoss.tool.Base.log('Viewport running.');
+        Vmoss.Tool.log('Viewport running.');
         Ext.tip.QuickTipManager.init();
 
         this.callParent(arguments);

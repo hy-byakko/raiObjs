@@ -15,12 +15,12 @@ Ext.define('Vmoss.view.main.Standard', {
     closable:true,
 
     initComponent:function () {
-        Vmoss.tool.Base.log('Standard running.');
+        Vmoss.Tool.log('Standard running.');
 
         var me = this,
             title = me.scaffold.text,
             instance = Ext.create('Vmoss.model.major.' + me.scaffold.model),
-            featureList = Vmoss.tool.Base.featureCollect(me, {
+            featureList = Vmoss.Tool.featureCollect(me, {
                 scan:true
             });
 

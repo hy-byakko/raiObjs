@@ -1,4 +1,4 @@
-Ext.define('Vmoss.tool.Base', {
+Ext.define('Vmoss.Tool', {
     singleton:true,
 
     requires:[
@@ -73,5 +73,28 @@ Ext.define('Vmoss.tool.Base', {
             buttons:Ext.MessageBox.OK,
             icon:Ext.MessageBox.ERROR
         });
-    }
+    },
+
+//返回一个仅复制原对象直接属性的对象
+    copy:function(obj){
+        return Ext.merge({}, obj);
+    },
+
+    promptBox: function(){
+        var msgCt;
+
+        function createBox(t, s){
+            return '<div class="message"><h3>' + t + '</h3><p>' + s + '</p></div>';
+        }
+
+        return function(title, format){
+            if(!msgCt){
+                msgCt = Ext.DomHelper.insertFirst(document.body, {id:'prompt-box-div'}, true);
+            }
+            var s = Ext.String.format.apply(String, Array.prototype.slice.call(arguments, 1));
+            var m = Ext.DomHelper.append(msgCt, createBox(title, s), true);
+            m.hide();
+            m.slideIn('t').ghost("t", { delay: 1500, remove: true});
+        };
+    }()
 })
