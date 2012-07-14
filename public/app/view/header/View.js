@@ -11,7 +11,7 @@
         Vmoss.Tool.log('Header running.');
 
         Ext.applyIf(this, {
-            html:"<img src='/images/New_toplogo.png'>",
+            html:"<img src='/resources/images/New_toplogo.png'>",
             dockedItems:[
                 Ext.create('Vmoss.view.header.User')
             ]
