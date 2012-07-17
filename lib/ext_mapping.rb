@@ -23,16 +23,16 @@ class ExtMapping
 
   def get_unit(name)
     (@unit_pool.select { |unit|
-      unit.name == name
+      unit.name == name.to_s
     })[0]
   end
 
   def add_condition(condition_struct, options = {})
-    controller_instance = options[:scope]
-    params = controller_instance.params
-    available_unit(params).each { |unit|
-      condition_struct = condition_struct.where(
-          controller_instance.send(unit.conditions.to_sym)) if unit.conditions
+    available_unit(options[:scope].params).each { |unit|
+      condition_struct = unit.add_condition(
+          condition_struct,
+          :controller => options[:scope]
+      )
     }
     condition_struct
   end
@@ -48,12 +48,11 @@ class ExtMapping
     }
   end
 
-  def mapping_attr(source, options = {})
-    available_unit.each{|unit|
+  def mapping_attr(options = {})
+    available_unit(options[:scope].params).each{|unit|
       unit.mapping_to_model(
-          source,
           :model => options[:model],
-          :controller => options[:controller]
+          :controller => options[:scope]
       )
     }
   end

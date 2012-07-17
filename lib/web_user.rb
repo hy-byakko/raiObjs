@@ -4,7 +4,7 @@ class WebUser
     @scope = scope
     session[:web_user] ||= {}
     user_cd = get_state(:user_cd)
-    login 'admin', 'admin' if !user_cd # && Rails.env == 'development'
+    login '0001', 'password' if !user_cd # && Rails.env == 'development'
     @instance ||= User.find_by_user_cd(user_cd) if user_cd
   end
 
@@ -149,8 +149,8 @@ class WebUser
     {
         :userCd => @instance.user_cd,
         :name => @instance.user_name,
-        #:role => self.role_symbols.join(','),
-        #:bumon => @instance.bumon.bumon_mei
+        :role => self.role_symbols.join(','),
+        :bumon => @instance.bumon.bumon_mei
     }
   end
 

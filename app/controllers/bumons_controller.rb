@@ -124,24 +124,17 @@ class BumonsController < ApplicationController
 
 # GET /bumons/1
   def show
-    @bumonsyozoku1 = Bumonsyozoku.find(:first, :conditions => "bumon_id = #{@bumon.id} and syozokulevel = 1")
-    @syozokubumonList = data_provide(:instance => @bumon, :method => :get_syozokubumon_data, :type => :autoCombox)
-    @bumonkbnlist = get_combo_list_by_conditions(Kind, {:conditions => 'kindcategory_cd = 32'}, 'id', 'kind_name')
-    # show.html.erb
+
   end
 
 # GET /bumons/new
   def new
-    @bumonkbnlist = get_combo_list_by_conditions(Kind, {:conditions => 'kindcategory_cd = 32'}, 'id', 'kind_name')
-    @bumon = Bumon.new(params[:bumon])
-    # new.html.erb
+
   end
 
 # GET /bumons/1/edit
   def edit
-    @bumonsyozoku1 = Bumonsyozoku.find(:first, :conditions => "bumon_id = #{@bumon.id} and syozokulevel = 1")
-    @bumonkbnlist = get_combo_list_by_conditions(Kind, {:conditions => 'kindcategory_cd = 32'}, 'id', 'kind_name')
-    # edit.html.erb
+
   end
 
 # POST /bumons

@@ -1,4 +1,7 @@
 # encoding: utf-8
+require_dependency 'web_user'
+require_dependency 'ext_mapping'
+require_dependency 'customize_exception'
 module CoreExtension
   module ActionController
     module Base
@@ -20,11 +23,30 @@ module CoreExtension
         )
       end
 
+      def show
+        render :json => {
+            :root => result[:data_source]
+        }.merge({
+                    :success => true
+                }
+        )
+      end
+
+      def create
+        instance = self.class.major.new.mapping_attr(
+            :scope => self
+        )
+        instance.save
+        self.class.mapping.default_struct(instance, :scope => self)
+        render :json => {:success => false}
+      end
+
       def update
-        self.class.major.find(params[:id]).match_attr(
-            params,
-            :controller => self
-        ).save
+        instance = self.class.major.find(params[:id]).mapping_attr(
+            :scope => self
+        )
+        instance.save
+        self.class.mapping.default_struct(instance, :scope => self)
         render :json => {:success => true}
       end
 

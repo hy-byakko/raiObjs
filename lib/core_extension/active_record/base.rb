@@ -3,6 +3,14 @@ module CoreExtension
   module ActiveRecord
     module Base
 
+      def mapping_attr(options = {})
+        options[:scope].class.mapping.mapping_attr(
+            :model => self,
+            :scope => options[:scope]
+        ) if options[:scope]
+        self
+      end
+
       def match_attr(source, options = {})
         source = self.class.key_to_symbol(source)
         redundant_attr = (options[:redundant_attr] || [:id, :created_at, :updated_at])
@@ -36,6 +44,24 @@ module CoreExtension
           end
         end
         bridge
+      end
+
+      def copy_to(target_class, options = {})
+        instance = target_class.new
+        instance.match_attr(self.attributes, :redundant_attr => []).save
+        if options[:associate]
+          options[:associate].each { |associate, associate_options|
+            associate_object = self.send(associate.to_sym)
+            case associate_object
+              when ActiveRecord::Base
+                instance.send(associate.to_sym).new.match_attr(associate_object.attributes, associate_options).save
+              else
+                associate_object.each { |sub_instance|
+                  instance.send(associate.to_sym).new.match_attr(sub_instance.attributes, associate_options).save
+                }
+            end
+          }
+        end
       end
 
       def self.included(active_record)
