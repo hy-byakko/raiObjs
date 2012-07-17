@@ -10,5 +10,6 @@ Ext.define('Vmoss.view.main.SearchForm', {
         columnWidth: .33
     },
 
-    feature: 'search'
+    feature: 'search',
+    fireUpdate: 'blur'
 });

@@ -30,7 +30,8 @@ Ext.define('Vmoss.view.main.ModifyView', {
                     text:"确定",
                     handler:function (button) {
                         if (modelBench.getForm().isValid()) {
-                            me.selInstance.save()
+                            modelBench.getForm().updateRecord(me.selInstance);
+                            me.selInstance.save();
                         }
                     }
                 },

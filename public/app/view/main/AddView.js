@@ -29,8 +29,9 @@ Ext.define('Vmoss.view.main.AddView', {
                 {
                     xtype:"button",
                     text:"确定",
-                    handler:function (button) {
+                    handler:function () {
                         if (modelBench.getForm().isValid()) {
+                            modelBench.getForm().updateRecord(instance)
                             instance.save()
                         }
                     }

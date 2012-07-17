@@ -8,6 +8,7 @@ Ext.define('Vmoss.lib.CCombo', {
     extend:'Ext.form.ComboBox',
     alias:'widget.ccombo',
 
+    enableKeyEvents:true,
     valueField:'id',
     displayField:'content',
     minChars:0,
@@ -17,7 +18,7 @@ Ext.define('Vmoss.lib.CCombo', {
         Vmoss.Tool.log('CCombo running.');
 
         var me = this,
-            options = {},
+            options,
             instance = me.modelInstance;
 
 
@@ -31,31 +32,42 @@ Ext.define('Vmoss.lib.CCombo', {
             ];
         }
 
-        options.store = Ext.create('Vmoss.lib.CStore', {
-            fields:[
-                {name: me.valueField, mapping: 0},
-                {name: me.displayField, mapping: 1}
-            ],
-            pageSize:me.pageSize,
-            data: me.data,
-            dispatch: me.dispatch,
-            url: me.parent.bind.proxy.url
-        });
+        options = {
+            store:Ext.create('Vmoss.lib.CStore', {
+                fields:[
+                    {name:me.valueField, mapping:0},
+                    {name:me.displayField, mapping:1}
+                ],
+                pageSize:me.pageSize,
+                data:me.data,
+                dispatch:me.dispatch,
+                url:me.parent.bind.proxy.url
+            })
+        };
 
         Ext.apply(me, options);
 
-        this.callParent(arguments);
+//全值清空认为是取消选择
+        me.on({
+            keyup:function () {
+                if (me.getRawValue() === '') {
+                    me.setValue('');
+                }
+            }
+        });
+
+        me.callParent(arguments);
     },
 
 // Combo不会主动将自身的limit传递给store(?)
-    getParams:function(){
+    getParams:function () {
         var me = this,
             requestParams = {},
             params = me.callParent(arguments);
 
 // 由Combo来传递额外的参数
-        if (me.requestParams){
-            Ext.each(me.requestParams, function(key){
+        if (me.requestParams) {
+            Ext.each(me.requestParams, function (key) {
                 requestParams[key] = me.modelInstance.get(key);
             });
         }

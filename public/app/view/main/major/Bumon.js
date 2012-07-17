@@ -29,8 +29,8 @@ Ext.define('Vmoss.view.main.major.Bumon', {
     ],
 
     benchFeature:[
-        'bumonCd',
-        'bumonMei',
+        {field: 'bumonCd', allowBlank: false},
+        {field: 'bumonMei', allowBlank: false},
         {
             field:'bumonlevelId',
             xtype:'ccombo',
