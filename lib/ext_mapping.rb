@@ -3,18 +3,29 @@ require_dependency File.expand_path(File.join('..', 'ext_mapping', 'mapping_unit
 class ExtMapping
   def initialize(options = {})
     @controller = options[:controller]
-    @unit_pool = options[:controller].major.columns.inject([]) { |mapping, column|
+    if options[:mapping]
+      @unit_pool = options[:mapping].inject([]) { |mapping, unit|
+        unit[1] = {:ref => unit[1]} if unit[1].is_a?(String)
+        mapping << MappingUnit.new(
+            {:name => unit[0].to_s}.merge(unit[1])
+        )
+      }
+    else
+#未指定mapping配置时使用major_class构造mapping
+      @unit_pool = options[:controller].major.columns.inject([]) { |mapping, column|
 #默认不映射 created_at, updated_at
-      unless ['created_at', 'updated_at'].include?(column.name)
-        mapping << MappingUnit.new(:name => column.name)
-      end
-      mapping
-    }
+        unless ['created_at', 'updated_at'].include?(column.name)
+          mapping << MappingUnit.new(:name => column.name)
+        end
+        mapping
+      }
+    end
   end
 
   def mapping_override(new_mapping)
     new_mapping.each{|name, options|
       unit = get_unit(name)
+      options = {:ref => options} if options.is_a?(String)
       unit ? unit.override(options) : @unit_pool << MappingUnit.new(
           {:name => name.to_s}.merge(options)
       )

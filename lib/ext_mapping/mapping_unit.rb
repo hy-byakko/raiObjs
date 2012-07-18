@@ -8,31 +8,69 @@ class MappingUnit
       :get
   ]
 
+# require option :name
   def initialize(options = {})
     @name = options[:name]
 
 #远程模型的字段名, 取值/赋值时皆调用此字段
     @ref = (options[:ref] || to_ext_name(options[:name]))
 
+    motion_init(options)
+    condition_init(options)
+  end
+
+  def override(options)
+    @ref = options[:ref] if options[:ref]
+    motion_init(options)
+    condition_init(options)
+  end
+
+  def motion_init(options)
     MOTION.each { |key|
       if options.has_key?(key)
         motion_build(key, options[key], :model)
       elsif options.has_key?((key.to_s + '_method').to_sym)
         motion_build(key, options[(key.to_s + '_method').to_sym], :controller)
       else
-        motion_build(key, options[:name], :model)
+# 仅在该动作不存在时为其配置默认
+        motion_build(key, options[:name], :model) unless self.send(key)
       end
     }
+  end
 
 # conditions将会尝试调用controller内相应名称的方法, 并认为该方法的返回值即为搜索条件.where()内的参数
+# 或者以seek_by定义预设规则 当两者配置都不存在的情况下会默认使用equal的方法
+  def condition_init(options)
+    return unless options[:conditions] || options[:seek_by]
+
+# 初始化condition配置
+    @pre_cond &&= nil
+    @suf_cond &&= nil
+    @conditions &&= nil
+
     if options[:conditions]
       @conditions = (options[:conditions] || to_ext_name(options[:name]))
-    else
+    elsif options[:seek_by]
       case options[:seek_by]
         when :similar
-
-        else
-
+          @pre_cond = "#{@get} LIKE :#{@get}"
+          @suf_cond = "%:depend%"
+        when :pre_similar
+          @pre_cond = "#{@get} LIKE :#{@get}"
+          @suf_cond = ":depend%"
+        when :suf_similar
+          @pre_cond = "#{@get} LIKE :#{@get}"
+          @suf_cond = "%:depend"
+        when :bigger
+          @pre_cond = "#{@get} > :#{@get}"
+        when :smaller
+          @pre_cond = "#{@get} < :#{@get}"
+        when :bigger_equal
+          @pre_cond = "#{@get} >= :#{@get}"
+        when :smaller_equal
+          @pre_cond = "#{@get} <= :#{@get}"
+        when :not_equal
+          @pre_cond = "#{@get} <> :#{@get}"
       end
     end
   end
@@ -41,12 +79,6 @@ class MappingUnit
     motion_value = (value || key).to_s
     self.send((key.to_s + '=').to_sym, motion_value)
     self.send((key.to_s + '_scope=').to_sym, scope)
-  end
-
-  def override(options = {})
-    options.each { |attr, value|
-      self.send((attr.to_s + '=').to_sym, value)
-    }
   end
 
   def to_ext_name(str)
@@ -73,12 +105,26 @@ class MappingUnit
     target[@ref.to_sym] = value if value
   end
 
-  def mapping_to_model(source, options = {})
+  def mapping_to_model(options = {})
+    source = options[:controller].params
     case @set_scope
       when :model
         options[:model].send((@set.to_s + '=').to_sym, source[@ref.to_sym])
       when :controller
-        options[:controller].send(@set.to_sym, source, options[:model])
+        options[:controller].send(@set.to_sym, options[:model])
+    end
+  end
+
+  def add_condition(condition, options = {})
+    if @conditions
+      condition.where(
+          options[:controller].send(@conditions.to_sym)) if @conditions
+    else
+      depend_on = {
+          @get.to_sym => options[:controller].params[@ref.to_sym]
+      }
+      depend_on[@get.to_sym] = @suf_cond.gsub(/:depend/, depend_on[@get.to_sym]) if @suf_cond
+      @pre_cond ? condition.where([@pre_cond, depend_on]) : condition.where(depend_on)
     end
   end
 

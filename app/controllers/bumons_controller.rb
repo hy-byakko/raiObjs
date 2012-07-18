@@ -3,32 +3,9 @@ class BumonsController < ApplicationController
   #before_filter :find_bumon, :only => [ :show, :edit, :update, :destroy ]
   #before_filter :get_combox_store, :only => [:new, :show, :edit]
 
-  self.major = Bumon
-
   # GET /bumons
   # GET /bumons.ext_json
   def index
-    #Uriagefull.visible(current_user, :field => {
-    #    :bumon_id => 'visible_bumon_ids',
-    #    :sagyotanto_id => 'visible_user_ids'
-    #}).all
-    #
-    #Userrole.visible(current_user).all
-    #
-    #Userrole.visible(current_user, :field => ['user_id', 'bumon_id']).all
-    #
-    #Userrole.visible(current_user, :field => 'bumon_id').all
-    #raise
-
-    #Uriagefull.find(1).copy_to(UriagefullDiscard, :associate => {
-    #    :kaisyukbnuricols => {
-    #        :filter => [:uriagefull_id]
-    #    },
-    #    :uriagefullcols => {
-    #        :filter => [:uriagefull_id]
-    #    }
-    #})
-
     #@bumonkbnlist = get_combo_list_by_conditions(Kind, {:conditions => 'kindcategory_cd = 32'}, 'id', 'kind_name')
     #if return_id = params[:return_id]
     #  bumons = Bumon.find_by_sql "select * from bumons order by #{sort_params()}"
@@ -46,38 +23,30 @@ class BumonsController < ApplicationController
     super
   end
 
-#self.mapping = {
-#    :id => 'id',
-#    :bumon_cd => 'bumonCd',
-#    :bumon_mei => 'bumonMei',
-#    :bumonlevel_id => 'bumonlevelId',
-#    :yubin_no => 'yubinNo',
-#    :tel_no => 'telNo',
-#    :fax_no => 'faxNo',
-#    :jusyo => 'jusyo'
-#}
-
-  self.default_mapping = true
-
   self.mapping_override(
       {
+          :bumon_cd => {
+              :seek_by => :similar
+          },
           :bumon_mei => {
               :seek_by => :similar
           },
           :parent_id => {
+              :set_method => 'ignore_me',
               :get_method => 'cyokuzoku_bumon'
           },
           :parent => {
               :get => 'syozokubumonlist'
           },
           :kind => {
-              :get => 'bumonlevellist'
-          },
-          :bumonlevel_id => {
-              :conditions => 'find_by_kind'
+              :get => 'kind.kind_name'
           }
       }
   )
+
+  def ignore_me(instance)
+
+  end
 
   def cyokuzoku_bumon(bumon)
     cyokuzoku = bumon.bumonsyozokus.select { |bumonsyozoku|
@@ -86,19 +55,8 @@ class BumonsController < ApplicationController
     cyokuzoku ? cyokuzoku.id : ''
   end
 
-  def find_by_cd
-    ['bumon_cd LIKE :query', {:query => (params[:bumonCd] + '%')}]
-  end
-
-  def find_by_kind
-    {
-        :bumonlevel_id => params[:bumonlevelId]
-    }
-  end
-
-
   def get_bumon_data
-    extjs_struct(query_condition(Kind.where(:kindcategory_cd => 32), ['kind_name'])) { |instance|
+    struct_exec(query_condition(Kind.where(:kindcategory_cd => 32), ['kind_name'])) { |instance|
       [
           instance.id,
           instance.kind_name
@@ -114,7 +72,7 @@ class BumonsController < ApplicationController
       }
       conditions.where('id NOT IN (?)', self_kakyuu_ids)
     end
-    extjs_struct(query_condition(conditions, ['bumon_mei'])) { |instance|
+    struct_exec(query_condition(conditions, ['bumon_mei'])) { |instance|
       [
           instance.id,
           instance.bumon_mei
@@ -124,41 +82,46 @@ class BumonsController < ApplicationController
 
 # GET /bumons/1
   def show
-
+    super
   end
 
 # GET /bumons/new
   def new
-
+    super
   end
 
 # GET /bumons/1/edit
   def edit
-
+    super
   end
 
 # POST /bumons
   def create
-    @bumon = Bumon.new(params[:bumon])
-    bumonsyozoku = Bumonsyozoku.new
+    #@bumon = Bumon.new(params[:bumon])
+    #bumonsyozoku = Bumonsyozoku.new
+    #
+    #respond_to do |format|
+    #  if @bumon.save
+    #    bumonsyozoku.bumon_id = @bumon.id
+    #    bumonsyozoku.syozokbumon_id = @bumon.id
+    #    bumonsyozoku.syozokulevel = 0
+    #    bumonsyozoku.save
+    #    flag = params[:bumonsyozoku]["syozokubumon_id"]
+    #    if flag !=nil && flag !=""
+    #      parent_bumon = Bumonsyozoku.find(:all, :conditions => "bumon_id = #{flag}")
+    #      parent_bumon.each { |x| y=Bumonsyozoku.new; y.bumon_id = @bumon.id; y.syozokulevel = x.syozokulevel + 1; y.syozokbumon_id=x.syozokbumon_id; y.save }
+    #    end
+    #    flash[:notice] = 'Bumon was successfully created.'
+    #    format.ext_json { render :json => @bumon.to_ext_json(:success => true) }
+    #  else
+    #    format.ext_json { render :json => @bumon.to_ext_json(:success => false) }
+    #  end
+    #end
+    super
+  end
 
-    respond_to do |format|
-      if @bumon.save
-        bumonsyozoku.bumon_id = @bumon.id
-        bumonsyozoku.syozokbumon_id = @bumon.id
-        bumonsyozoku.syozokulevel = 0
-        bumonsyozoku.save
-        flag = params[:bumonsyozoku]["syozokubumon_id"]
-        if flag !=nil && flag !=""
-          parent_bumon = Bumonsyozoku.find(:all, :conditions => "bumon_id = #{flag}")
-          parent_bumon.each { |x| y=Bumonsyozoku.new; y.bumon_id = @bumon.id; y.syozokulevel = x.syozokulevel + 1; y.syozokbumon_id=x.syozokbumon_id; y.save }
-        end
-        flash[:notice] = 'Bumon was successfully created.'
-        format.ext_json { render :json => @bumon.to_ext_json(:success => true) }
-      else
-        format.ext_json { render :json => @bumon.to_ext_json(:success => false) }
-      end
-    end
+  def update
+    super
   end
 
   # PUT /bumons/1

@@ -46,6 +46,15 @@ module CoreExtension
         bridge
       end
 
+#
+# Uriagefull.find(1).copy_to(UriagefullDiscard, :associate => {
+#     :kaisyukbnuricols => {
+#         :filter => [:uriagefull_id]
+#     },
+#     :uriagefullcols => {
+#         :filter => [:uriagefull_id]
+#     }
+# })
       def copy_to(target_class, options = {})
         instance = target_class.new
         instance.match_attr(self.attributes, :redundant_attr => []).save
@@ -65,15 +74,16 @@ module CoreExtension
       end
 
       def self.included(active_record)
-#'±%{self.bumon}%{time-md}G%{serial-15}'
-#value = 'G0101FA144'
-#value = 'G(?<time_md>[0-9]{4}\)(?<serial_f_5>[0-9A-F]{5})'
-#reg = Regexp.new(value)
-#match_data = reg.match value
-#match_data.names.each{|rule_unit|
-#  rule_unit = "{\k<#{rule_unit}>}"
-#  value.gsub!(reg, rule_unit.to_sym => '1')
-#}
+#
+# '±%{self.bumon}%{time-md}G%{serial-15}'
+# value = 'G0101FA144'
+# value = 'G(?<time_md>[0-9]{4}\)(?<serial_f_5>[0-9A-F]{5})'
+# reg = Regexp.new(value)
+# match_data = reg.match value
+# match_data.names.each{|rule_unit|
+#   rule_unit = "{\k<#{rule_unit}>}"
+#   value.gsub!(reg, rule_unit.to_sym => '1')
+# }
 #
 # code_generate :denpyo_no, :combo_value => ['self.bumon_id']
 # def denpyo_no_rule(v)

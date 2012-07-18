@@ -13,23 +13,12 @@ module CoreExtension
           else
             result = self.send params[:dispatch].to_sym
         end
-
-        render :json => {
-            :totalLength => result[:total_length],
-            :root => result[:data_source]
-        }.merge({
-                    :success => true
-                }
-        )
+        render extjs_struct(result)
       end
 
       def show
-        render :json => {
-            :root => result[:data_source]
-        }.merge({
-                    :success => true
-                }
-        )
+        instance = self.class.major.find(params[:id])
+        render extjs_struct(instance)
       end
 
       def create
@@ -37,8 +26,7 @@ module CoreExtension
             :scope => self
         )
         instance.save
-        self.class.mapping.default_struct(instance, :scope => self)
-        render :json => {:success => false}
+        render extjs_struct(instance)
       end
 
       def update
@@ -47,11 +35,11 @@ module CoreExtension
         )
         instance.save
         self.class.mapping.default_struct(instance, :scope => self)
-        render :json => {:success => true}
+        render extjs_struct(instance)
       end
 
       def search
-        extjs_struct(search_condition)
+        struct_exec(search_condition)
       end
 
 # 为Relation提供query内容的查询条件
@@ -73,8 +61,8 @@ module CoreExtension
         self.class.mapping.add_condition(condition_struct, :scope => self)
       end
 
-      # Relation的查询并组装成extjs格式, 组装方式由传入的代码块/Proc/默认映射处理来决定.
-      def extjs_struct(condition = nil, options = {})
+# Relation的查询并组装成extjs格式, 组装方式由传入的代码块/Proc/默认映射处理来决定.
+      def struct_exec(condition = nil, options = {})
         condition_struct = (condition || self.class.major)
         total_length = condition_struct.count
         total_length = total_length.size if total_length.is_a?(Hash)
@@ -96,27 +84,60 @@ module CoreExtension
 
         {
             :total_length => total_length,
-            :data_source => data_source
+            :source => data_source
         }
       end
 
+      def extjs_struct(source = nil)
+        ext_respond = {
+            :json => {
+                :success => true
+            }
+        }
+        case source
+          when ActiveRecord::Base
+            if source.errors
+              exception_report(source)
+            else
+              ext_respond[:json].merge!(
+                  {
+                      :root => [
+                          self.class.mapping.default_struct(source, :scope => self)
+                      ]
+                  }
+              )
+            end
+          when Hash
+            ext_respond[:json].merge!(
+                {
+                    :totalLength => source[:total_length],
+                    :root => source[:source]
+                }
+            )
+          when NilClass
+          else
+            raise 'Unexpected source type.'
+        end
+        ext_respond
+      end
+
 #
-#当第一个参数为String或者由String所组成的数组时
-#exception_report('common.m0001')
-#exception_report('common.m0001', :count => 3, :name => 'test')
-#exception_report('common.m0001', :params => {:count => 3, :name => 'test'})
-#exception_report('common.m0001', :standard_replace => 'Some messages')
-#exception_report('common.m0001', :count => 3, :standard_replace => 'Total is %{count}')
-#exception_report('common.m0001', :params => {:count => 3}, :standard_replace => 'Total is %{count}')
-#exception_report('common.m0001', :count => 3, :type => :warning, :render => {:action =>:show})
-#exception_report('common.m0001', :params => {:count => 3}, :type => :warning, :render => {:action =>:show})
+# 当第一个参数为String或者由String所组成的数组时
+# exception_report('common.m0001')
+# exception_report('common.m0001', :count => 3, :name => 'test')
+# exception_report('common.m0001', :params => {:count => 3, :name => 'test'})
+# exception_report('common.m0001', :standard_replace => 'Some messages')
+# exception_report('common.m0001', :count => 3, :standard_replace => 'Total is %{count}')
+# exception_report('common.m0001', :params => {:count => 3}, :standard_replace => 'Total is %{count}')
+# exception_report('common.m0001', :count => 3, :type => :warning, :render => {:action =>:show})
+# exception_report('common.m0001', :params => {:count => 3}, :type => :warning, :render => {:action =>:show})
 #
-# Full params: exception_report('common.m0001', :params => {:count => 3}, :standard_replace => 'Total is %{count}', :type => :warning, :information => {:name => 'Warning'}})
+#  Full params: exception_report('common.m0001', :params => {:count => 3}, :standard_replace => 'Total is %{count}', :type => :warning, :information => {:name => 'Warning'}})
 #
-#第一个参数为ActiveRecord实例或者由ActiveRecord实例所组成的数组时
-#exception_report(@bumon) #=>"部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空"
-#exception_report([@bumons[0], @bumons[1], @bumons[2]]]) #=>"第1行: 部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空\n第3行: 部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空"
-#                              ^此实例无错误
+# 第一个参数为ActiveRecord实例或者由ActiveRecord实例所组成的数组时
+# exception_report(@bumon) #=>"部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空"
+# exception_report([@bumons[0], @bumons[1], @bumons[2]]]) #=>"第1行: 部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空\n第3行: 部门名称不能为空, 不能为数字并且不能大于6位; 部门编号不能为空"
+#                               ^此实例无错误
 #
       def exception_report(source, options = {})
         exception_type = options.delete(:type)
@@ -293,32 +314,48 @@ module CoreExtension
         end
 
         def active_controller.major
-          @major_class
+          @major_class ||= self.controller_name.singularize.classify.constantize
         end
 
-        def active_controller.mapping=(map)
-          @mapping = map
+#
+# self.mapping = {
+#     :id => 'id',
+#     :bumon_cd => 'bumonCd',
+#     :bumon_mei => 'bumonMei',
+#     :bumonlevel_id => 'bumonlevelId',
+#     :yubin_no => 'yubinNo',
+#     :tel_no => 'telNo',
+#     :fax_no => 'faxNo',
+#     :jusyo => 'jusyo'
+# }
+        def active_controller.mapping=(mapping)
+          @mapping = ExtMapping.new(
+              :mapping => mapping,
+              :controller => self
+          )
         end
 
         def active_controller.mapping
-          @mapping || default_mapping_build
-          @mapping
+          @mapping ||= ExtMapping.new(
+              :controller => self
+          )
         end
 
-        def active_controller.default_mapping=(default_mapping)
-          default_mapping_build if default_mapping
-        end
+# 废弃
+#       def active_controller.default_mapping=(default_mapping)
+#         default_mapping_build if default_mapping
+#       end
+#
+#       def active_controller.default_mapping_build
+#         unless @mapping
+#           @mapping = ExtMapping.new(
+#               :controller => self
+#           )
+#         end
+#       end
 
-        def active_controller.default_mapping_build
-          unless @mapping
-            @mapping = ExtMapping.new(
-                :controller => self
-            )
-          end
-        end
-
-        def active_controller.mapping_override(new_map)
-          @mapping.mapping_override(new_map)
+        def active_controller.mapping_override(new_mapping)
+          mapping.mapping_override(new_mapping)
         end
       end
     end
