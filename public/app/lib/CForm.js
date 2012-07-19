@@ -47,17 +47,19 @@ Ext.define('Vmoss.lib.CForm', {
                     field: field,
                     feature: me.feature
                 }));
-// 处理存在参照的情况
-                Ext.Array.each(options.items, function(item){
-
-                });
             }
         );
 
         Ext.apply(me, options);
 
-        me.on('afterrender', function(){
-            me.loadRecord(me.bind);
+        me.on({
+            afterrender: function(){
+                me.loadRecord(me.bind);
+            },
+// 在销毁前释放与model实例的链接
+            beforedestroy: function(){
+                delete me.bind;
+            }
         });
     },
 

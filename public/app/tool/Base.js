@@ -11,6 +11,7 @@ Ext.define('Vmoss.Tool', {
     ],
 
     logEnable:false,
+    requestLog: true,
 
     function_merge:function () {
         var fnc_list = [].slice.call(arguments, 0);
@@ -97,4 +98,24 @@ Ext.define('Vmoss.Tool', {
             m.slideIn('t').ghost("t", { delay: 1500, remove: true});
         };
     }()
-})
+});
+
+
+Ext.Ajax.on({
+// 此处处理服务器所捕获的逻辑异常
+    beforerequest:function (conn, options) {
+        if (Vmoss.Tool.requestLog){
+            Vmoss.Tool.log([conn, 'Requesting']);
+        }
+    },
+// 此处处理服务器所捕获的逻辑异常
+    requestcomplete:function (conn, response, options) {
+        var responseObj = Ext.JSON.decode(response);
+        if (responseObj.success) return;
+        Vmoss.Tool.promptBox(responseObj.exceptionType, responseObj.exceptionMessage);
+    },
+// 此处为默认的异常提示 404/500
+    requestexception:function (conn, response, options) {
+        Vmoss.Tool.promptBox('服务器连接异常', response.statusText);
+    }
+});

@@ -97,7 +97,10 @@ module CoreExtension
         case source
           when ActiveRecord::Base
             if source.errors
-              exception_report(source)
+# ext_form组建接收errors数据构造异常提示
+              exception_report(source, :information => {
+                  :errors => source.errors
+              })
             else
               ext_respond[:json].merge!(
                   {
@@ -212,14 +215,6 @@ module CoreExtension
         stuff_message(message, param_list)
       end
 
-      def catch_exceptions
-        begin
-          yield
-        rescue Exception => exception
-          exception_render(exception)
-        end
-      end
-
       def exception_render(exception)
         case exception
           when WarningException
@@ -230,12 +225,16 @@ module CoreExtension
             type = :system_error # 系统未捕获错误提示
         end
 
-        config = {}
-# type以不同的键名标识为何种类型的异常
-        config[:json] = {:success => false, type => exception.to_s}
-        config[:json] = (type != :system_error) ? config[:json].merge(exception.info).to_json : config[:json].to_json
+        config = {
+            :json => {
+                :success => false,
+                type => exception.to_s
+            }
+        }
 
-        render config
+        config[:json].merge!(exception.info) if type != :system_error
+
+        render config.to_json
       end
 
       def authorize

@@ -10,9 +10,9 @@ Ext.define('Vmoss.view.main.button.GridModify', {
             selected = grid.selModel.getSelection();
 
         if (selected.length == 0) {
-            Vmoss.Tool.errorMessage('请选择!');
+            Vmoss.Tool.promptBox('错误操作', '请选择!');
         } else if (selected.length > 1) {
-            Vmoss.Tool.errorMessage('请选择一个进行修改');
+            Vmoss.Tool.promptBox('错误操作', '请选择一个' +  grid.instanceLabel + '进行修改!');
         } else {
             Ext.create('Vmoss.view.main.ModifyView', {
                 selInstance:selected[0],

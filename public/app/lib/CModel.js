@@ -80,8 +80,9 @@ Ext.define('Vmoss.lib.CModel', {
     },
 
     set:function (fieldName, newValue) {
-        this.callParent(arguments);
+        var result = this.callParent(arguments);
         this.fireEvent('afterset', this, fieldName);
+        return result;
     },
 
     save:function (options) {

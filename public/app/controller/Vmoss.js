@@ -25,7 +25,7 @@ Ext.define('Vmoss.controller.Vmoss', {
 
     menuTreeLoad:function (menuView) {
         var controller = this;
-        Ext.create('Vmoss.tool.Request').request({
+        Ext.Ajax.request({
             url:'/main/menu',
             success:function (response, options) {
                 var obj = Ext.decode(response.responseText);

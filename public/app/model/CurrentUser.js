@@ -35,7 +35,7 @@ Ext.define('Vmoss.model.CurrentUser', {
     save:function () {
         var currentUser = Ext.ComponentQuery.query('userwidget')[0].currentUser,
             currentUserData = Ext.JSON.encode(currentUser.getData());
-        Ext.widget('request').request({
+        Ext.Ajax.request({
             url: '/main/alter_password',
             method: 'get',
             params: {
@@ -60,7 +60,7 @@ Ext.define('Vmoss.model.CurrentUser', {
     statics:{
         load:function () {
             var user = Ext.create('Vmoss.model.CurrentUser');
-            Ext.widget('request').request({
+            Ext.Ajax.request({
                 url:'/main/ext_current_user',
                 success:function (response, options) {
                     var obj = Ext.decode(response.responseText);

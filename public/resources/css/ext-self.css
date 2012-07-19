@@ -1,6 +1,6 @@
-.loginbgimage { 
-   background: url(../images/New_toplogo.background.png );
-   background-repeat: repeat-x; 
+.loginbgimage {
+    background: url(../images/New_toplogo.background.png);
+    background-repeat: repeat-x;
 }
 
 .icon-reset {
@@ -33,4 +33,35 @@
 
 .icon-view {
     background-image: url(../images/view.png) !important;
+}
+
+#prompt-box-div {
+    position: absolute;
+    left: 38%;
+    top: 40px;
+    width: 300px;
+    z-index: 500000;
+}
+
+#prompt-box-div .message {
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    background: #F6F6F6;
+    border: 2px solid #ccc;
+    margin-top: 2px;
+    padding: 10px 15px;
+    color: #555;
+}
+
+#prompt-box-div .message h3 {
+    margin: 0 0 8px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#prompt-box-div .message p {
+    margin: 0;
+    font-size: 9px;
+    pading: 2px;
+    padding-left: 10%;
 }
