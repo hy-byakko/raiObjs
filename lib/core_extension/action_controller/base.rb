@@ -2,6 +2,7 @@
 require_dependency 'web_user'
 require_dependency 'ext_mapping'
 require_dependency 'customize_exception'
+require 'active_record'
 module CoreExtension
   module ActionController
     module Base
@@ -17,25 +18,21 @@ module CoreExtension
       end
 
       def show
-        instance = self.class.major.find(params[:id])
-        render extjs_struct(instance)
+        render extjs_struct(self.class.major.find(params[:id]))
       end
 
       def create
-        instance = self.class.major.new.mapping_attr(
+        self.class.major.new.mapping_attr(
             :scope => self
-        )
-        instance.save
-        render extjs_struct(instance)
+        ).save!
+        render extjs_struct
       end
 
       def update
-        instance = self.class.major.find(params[:id]).mapping_attr(
+        self.class.major.find(params[:id]).mapping_attr(
             :scope => self
-        )
-        instance.save
-        self.class.mapping.default_struct(instance, :scope => self)
-        render extjs_struct(instance)
+        ).save!
+        render extjs_struct
       end
 
       def search
@@ -96,20 +93,13 @@ module CoreExtension
         }
         case source
           when ActiveRecord::Base
-            if source.errors
-# ext_form组建接收errors数据构造异常提示
-              exception_report(source, :information => {
-                  :errors => source.errors
-              })
-            else
-              ext_respond[:json].merge!(
-                  {
-                      :root => [
-                          self.class.mapping.default_struct(source, :scope => self)
-                      ]
-                  }
-              )
-            end
+            ext_respond[:json].merge!(
+                {
+                    :root => [
+                        self.class.mapping.default_struct(source, :scope => self)
+                    ]
+                }
+            )
           when Hash
             ext_respond[:json].merge!(
                 {
@@ -151,7 +141,7 @@ module CoreExtension
           column_list = (options.delete(:column_list) || [])
           0.upto(source.size - 1).each { |i|
             msg_unit = exception_msg_struct(source[i], options)
-            msg_combo << s_t('messages.base.sort', {:i => (column_list.shift || (i + 1)).to_s}) + msg_unit if msg_unit != ''
+            msg_combo << s_t('general.base.sort', {:i => (column_list.shift || (i + 1)).to_s}) + msg_unit if msg_unit != ''
           }
           message = msg_combo.join("\n")
         else
@@ -180,7 +170,7 @@ module CoreExtension
                 invalid_msg = t(unit.class.to_s.downcase + '.' + key.to_s) + invalid_list[0]
               else
                 last_invalid = invalid_list.pop
-                invalid_msg = t(unit.class.to_s.downcase + '.' + key.to_s) + invalid_list.join(', ') + t('message.base.and') + last_invalid
+                invalid_msg = t(unit.class.to_s.downcase + '.' + key.to_s) + invalid_list.join(', ') + t('general.base.and') + last_invalid
             end
             msg_list << invalid_msg
           }
@@ -190,7 +180,7 @@ module CoreExtension
           if options[:standard_replace]
             message = options.delete(:standard_replace)
           else
-            message =I18n.t "messages.#{unit}" #message_store[code.to_s] I18n.t
+            message =I18n.t "general.errors.#{unit}" #message_store[code.to_s] I18n.t
           end
           param_list = options[:params] ? options[:params] : options
           stuff_message(message, param_list)
@@ -216,25 +206,27 @@ module CoreExtension
       end
 
       def exception_render(exception)
-        case exception
-          when WarningException
-            type = :report_warning # 警告提示
-          when ErrorException
-            type = :report_error # 错误提示
-          else
-            type = :system_error # 系统未捕获错误提示
-        end
-
-        config = {
-            :json => {
-                :success => false,
-                type => exception.to_s
-            }
+        exception_unit = {
+          :success => false,
+          :exceptionMessage => exception.to_s
         }
 
-        config[:json].merge!(exception.info) if type != :system_error
+        case exception
+          when WarningException
+            exception_unit[:exceptionType] = t('general.warnings.title.common') # 警告提示
+            exception_unit.merge!(exception.info)
+          when ErrorException
+            exception_unit[:exceptionType] = t('general.errors.title.common') # 错误提示
+            exception_unit.merge!(exception.info)
+          when 'ActiveRecord::RecordInvalid'.constantize
+            exception_unit[:exceptionType] = t('general.errors.title.record') # 保存记录出错
+            exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid')
+            exception_unit[:errors] = exception.record.errors
+          else
+            exception_unit[:exceptionType] = t('general.errors.title.uncatched') # 系统未捕获错误提示
+        end
 
-        render config.to_json
+        render :json => exception_unit
       end
 
       def authorize
@@ -294,6 +286,14 @@ module CoreExtension
         true
       end
 
+      def catch_exception
+        begin
+          yield
+        rescue Exception => exception
+          exception_render(exception)
+        end
+      end
+
 # 废弃:
 # 根据远程model来形成本次返回格式(废弃)
 #    def remote_model_map
@@ -306,7 +306,7 @@ module CoreExtension
 # Static Method
       def self.included(active_controller)
         active_controller.before_filter :authorize
-        #active_controller.around_filter :catch_exceptions
+        active_controller.around_filter :catch_exception
 
         def active_controller.major=(major_class)
           @major_class = major_class

@@ -124,11 +124,21 @@ class MainController < ApplicationController
                                  })
     ]
 
-    render :json => tree_panel
+    render :json => {
+        :root => tree_panel
+    }.merge(
+        {
+            :success => true
+        }
+    )
   end
 
   def ext_current_user
-    render :json => current_user.ext_current_user
+    render :json => current_user.ext_current_user.merge(
+        {
+            :success => true
+        }
+    )
   end
 
   def login #登录验证

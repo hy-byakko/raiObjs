@@ -2,7 +2,6 @@ Ext.define('Vmoss.Tool', {
     singleton:true,
 
     requires:[
-        'Vmoss.tool.Request',
         'Vmoss.lib.CForm',
         'Vmoss.lib.CCombo',
         'Vmoss.lib.CModel',
@@ -102,7 +101,7 @@ Ext.define('Vmoss.Tool', {
 
 
 Ext.Ajax.on({
-// 此处处理服务器所捕获的逻辑异常
+// 记录本程序向服务器发起的所有请求
     beforerequest:function (conn, options) {
         if (Vmoss.Tool.requestLog){
             Vmoss.Tool.log([conn, 'Requesting']);
@@ -110,12 +109,12 @@ Ext.Ajax.on({
     },
 // 此处处理服务器所捕获的逻辑异常
     requestcomplete:function (conn, response, options) {
-        var responseObj = Ext.JSON.decode(response);
+        var responseObj = Ext.JSON.decode(response.responseText);
         if (responseObj.success) return;
         Vmoss.Tool.promptBox(responseObj.exceptionType, responseObj.exceptionMessage);
     },
 // 此处为默认的异常提示 404/500
     requestexception:function (conn, response, options) {
-        Vmoss.Tool.promptBox('服务器连接异常', response.statusText);
+        Vmoss.Tool.promptBox('服务器异常', response.statusText);
     }
 });

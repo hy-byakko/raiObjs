@@ -29,7 +29,7 @@ Ext.define('Vmoss.controller.Vmoss', {
             url:'/main/menu',
             success:function (response, options) {
                 var obj = Ext.decode(response.responseText);
-                Ext.Array.each(obj, function (config) {
+                Ext.Array.each(obj.root, function (config) {
                     var tree = Ext.create('Vmoss.view.menu.Tree', {
                         title:config.title,
                         store:Ext.create('Vmoss.store.TreeStore', config.TreeStore)
