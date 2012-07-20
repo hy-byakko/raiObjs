@@ -99,14 +99,20 @@ Ext.define('Vmoss.lib.CModel', {
         this.callParent(options);
     },
 
-//
+//添加form绑定
     bindForm:function (bindForm) {
         this.bindForms = this.bindForms || [];
         this.bindForms.push(bindForm);
 
         if (!this.bindForms) {
+//在与远程完成交互时通知所绑定的form
             this.on("response", this.componentBindHandle);
         }
+    },
+
+//取消form绑定
+    unBindForm:function (bindForm) {
+        Ext.Array.remove(this.bindForms, bindForm);
     },
 
 //此方法为model实例内的某一属性与component的某一属性绑定的实现, 绑定为双向相互都能修改对方的值.

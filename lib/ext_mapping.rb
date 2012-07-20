@@ -48,6 +48,14 @@ class ExtMapping
     condition_struct
   end
 
+# 简单键映射: 将键替换成该键对应mapping_unit名的ref值
+  def ref_keys(source)
+    source.inject({}){|ref, source_unit|
+      ref[get_unit(source_unit[0]).ref.to_sym] = source_unit[1]
+      ref
+    }
+  end
+
   def default_struct(instance, options = {})
     @unit_pool.inject({}) { |source, unit|
       unit.struct_value(

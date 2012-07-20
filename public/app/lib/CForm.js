@@ -1,11 +1,17 @@
 /**
+ * CForm的基础定位为Model提供一种UI显示, 即它会呈现出为他所绑定的model的表单特性, 并附加modelField所提供的额外属性
+ *      会在fireUpdate的时机更新所绑定的model
+ *      可激发所绑定的model于远程交互, 行为类似于表单的提交
+ *      仅在model与远程交互之后才会与所绑定的model进行数据同步, 并不时时随model的改变所改变
+ *      在自身销毁前会取消与model的绑定
+ *      只会与一个model发生绑定关系
+ *
  * ExtendConfig:
  *  bind: Model         //绑定一个model的实例, 并以该model实例创建自身field
  *  modelField: Array   //如果指定的情况会依照此数组内的属性创建field, 并且添加model内相应的额外属性
  *  feature: String     //指定的情况下会额外遍历model内(例: 'grid' + 'Feature')属性, 添加到field创建
  *  fireUpdate: String  //该事件触发时更新对象, 默认为beforeaction
  */
-//Todo 绑定可能会造成无法进行垃圾回收, 注意释放内存, 以免造成泄漏
 Ext.define('Vmoss.lib.CForm', {
     extend:'Ext.form.Panel',
 
@@ -37,6 +43,9 @@ Ext.define('Vmoss.lib.CForm', {
             options = {},
             fieldList;
 
+// 在model的form绑定中添加自身
+        me.bind.bindForm(me);
+
         options.items = me.items || [];
         options.defaultType = 'textfield';
 
@@ -58,6 +67,7 @@ Ext.define('Vmoss.lib.CForm', {
             },
 // 在销毁前释放与model实例的链接
             beforedestroy: function(){
+                me.bind.unBindForm(me);
                 delete me.bind;
             }
         });

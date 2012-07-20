@@ -2,7 +2,6 @@
 require_dependency 'web_user'
 require_dependency 'ext_mapping'
 require_dependency 'customize_exception'
-require 'active_record'
 module CoreExtension
   module ActionController
     module Base
@@ -221,7 +220,8 @@ module CoreExtension
           when 'ActiveRecord::RecordInvalid'.constantize
             exception_unit[:exceptionType] = t('general.errors.title.record') # 保存记录出错
             exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid')
-            exception_unit[:errors] = exception.record.errors
+# 字段映射
+            exception_unit[:errors] = self.class.mapping.ref_keys(exception.record.errors)
           else
             exception_unit[:exceptionType] = t('general.errors.title.uncatched') # 系统未捕获错误提示
         end
