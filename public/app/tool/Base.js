@@ -13,9 +13,14 @@ Ext.define('Vmoss.Tool', {
     requestLog: true,
 
     function_merge:function () {
+// 将以参数形式传入的函数句柄转存为数组
         var fnc_list = [].slice.call(arguments, 0);
+// 清理未定义的参数
+        Ext.Array.unique(fnc_list);
+        Ext.Array.remove(fnc_list, undefined);
         return function () {
             for (var i = 0, length = fnc_list.length; i < length; i++) {
+// 实际参数转化为数组
                 var params = [].slice.call(arguments, 0);
                 fnc_list[i].apply(this, params)
             }
@@ -78,6 +83,15 @@ Ext.define('Vmoss.Tool', {
 //返回一个仅复制原对象直接属性的对象
     copy:function(obj){
         return Ext.merge({}, obj);
+    },
+
+    insureArg:function(firstArg, args){
+        if(!firstArg) {
+            firstArg = {};
+            args[0] = firstArg;
+            args.length = 1;
+        }
+        return firstArg;
     },
 
     promptBox: function(){

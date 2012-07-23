@@ -79,7 +79,7 @@ Ext.define('Vmoss.lib.CForm', {
         }
     },
 
-//以所绑定的实例为基础创建相应的field
+// 以所绑定的实例为基础创建相应的field
     getModelField:function (options) {
         options = options || {};
         var me = this,
@@ -94,12 +94,12 @@ Ext.define('Vmoss.lib.CForm', {
             },
             event = me.fireUpdate || 'beforeaction';
 
-//备份CForm自身所提供的modelField属性, 并使之与model内的属性合并
+// 备份CForm自身所提供的modelField属性, 并使之与model内的属性合并
         if (Ext.typeOf(field) !== 'string') {
             config = Ext.mergeIf(Vmoss.Tool.copy(field), config);
         }
 
-//为config添加创建他的实例链接
+// 为config添加创建他的实例链接
         config = Ext.mergeIf(config, {
             modelInstance: instance
         });

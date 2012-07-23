@@ -86,28 +86,28 @@ Ext.define('Vmoss.lib.CModel', {
     },
 
     save:function (options) {
-        options = (options || {});
+        options = Vmoss.Tool.insureArg(options, arguments)
         var me = this;
 
-        if (options.fireResponse) {
-            Vmoss.Tool.function_merge(options.callback, function (options, success, response) {
-                me.fireEvent('response', me, response);
+        if (!options.fireResponse) {
+            options.callback = Vmoss.Tool.function_merge(options.callback, function (record, operation) {
+                me.fireEvent('response', me, record, operation);
             });
             options.fireResponse = true;
         }
 
-        this.callParent(options);
+        this.callParent(arguments);
     },
 
 //添加form绑定
     bindForm:function (bindForm) {
-        this.bindForms = this.bindForms || [];
-        this.bindForms.push(bindForm);
-
         if (!this.bindForms) {
 //在与远程完成交互时通知所绑定的form
             this.on("response", this.componentBindHandle);
         }
+
+        this.bindForms = this.bindForms || [];
+        this.bindForms.push(bindForm);
     },
 
 //取消form绑定
@@ -166,7 +166,8 @@ Ext.define('Vmoss.lib.CModel', {
         return false;
     },
 
-    componentBindHandle:function (component) {
+    componentBindHandle:function (component, success, options) {
+        console.log(success);
         Ext.Array.each(component.bindItems, function (bindItem) {
             var model = bindItem.bind,
                 componentValue;
