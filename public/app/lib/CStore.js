@@ -29,12 +29,7 @@ Ext.define('Vmoss.lib.CStore', {
 
     load:function (options) {
         Vmoss.Tool.log('Store loads here.');
-
-        if(!options) {
-            options = {};
-            arguments[0] = options;
-            arguments.length = 1;
-        }
+        options = options || Vmoss.Tool.insureArg(options, arguments) ;
 
         options.params = options.params || {};
 

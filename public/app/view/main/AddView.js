@@ -1,8 +1,9 @@
 /**
  * ExtendConfig:
- * model:String,
- * instanceLabel:String,
- * modelField:Array
+ *  model:String,
+ *  instanceLabel:String,
+ *  modelField:Array
+ *  grid:Ext.grid.Panel //传入链接用于load触发
  */
 Ext.define('Vmoss.view.main.AddView', {
     extend:'Ext.window.Window',
@@ -30,10 +31,12 @@ Ext.define('Vmoss.view.main.AddView', {
                     xtype:"button",
                     text:"确定",
                     handler:function () {
-                        if (modelBench.getForm().isValid()) {
-                            modelBench.getForm().updateRecord(instance)
-                            instance.save()
-                        }
+                        modelBench.modelSubmit({
+                            success: function(){
+                                me.destroy();
+                                me.grid.store.load();
+                            }
+                        })
                     }
                 },
                 {

@@ -2,7 +2,7 @@
  * ExtendConfig:
  *  dispatch:String
  *  data:Array
- *  requestParams:Array 内部store请求数据所附带的参数
+ *  requestParams:Array //内部store请求数据所附带的参数
  */
 Ext.define('Vmoss.lib.CCombo', {
     extend:'Ext.form.ComboBox',

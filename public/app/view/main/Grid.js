@@ -22,7 +22,6 @@ Ext.define('Vmoss.view.main.Grid', {
         var me = this,
             options,
             store = Ext.create('Vmoss.view.main.BindStore', {
-//Todo: 此处使用autoLoad加载速度会略微慢于直接调用store的load, 原因可能由调用实际相关.
                 autoLoad: true,
                 dispatch:'search',
                 model:'Vmoss.model.major.' + me.model,
@@ -55,7 +54,7 @@ Ext.define('Vmoss.view.main.Grid', {
             ]
         }
 
-        Ext.apply(me, options)
+        Ext.apply(me, options);
 
         me.callParent(arguments);
     },

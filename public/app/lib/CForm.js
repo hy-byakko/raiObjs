@@ -79,6 +79,14 @@ Ext.define('Vmoss.lib.CForm', {
         }
     },
 
+// options将会被直接用于model的save
+    modelSubmit:function (options) {
+        if (this.getForm().isValid()) {
+            this.getForm().updateRecord(this.bind);
+            this.bind.save(options);
+        }
+    },
+
 // 以所绑定的实例为基础创建相应的field
     getModelField:function (options) {
         options = options || {};

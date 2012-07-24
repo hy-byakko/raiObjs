@@ -2,8 +2,6 @@ Ext.define('Vmoss.lib.CModel', {
     extend:'Ext.data.Model',
 
     constructor:function () {
-        Vmoss.Tool.log('CModel running.');
-
         var me = this;
 
 // 不使用此方法的原因是model生成非常频繁 每次都调用此方法会造成性能损失
@@ -90,8 +88,8 @@ Ext.define('Vmoss.lib.CModel', {
         var me = this;
 
         if (!options.fireResponse) {
-            options.callback = Vmoss.Tool.function_merge(options.callback, function (record, operation) {
-                me.fireEvent('response', me, record, operation);
+            options.callback = Vmoss.Tool.functionMerge(options.callback, function (record, operation) {
+                me.fireEvent('response', record, operation);
             });
             options.fireResponse = true;
         }
@@ -103,7 +101,7 @@ Ext.define('Vmoss.lib.CModel', {
     bindForm:function (bindForm) {
         if (!this.bindForms) {
 //在与远程完成交互时通知所绑定的form
-            this.on("response", this.componentBindHandle);
+            this.on("response", this.formBindHandle);
         }
 
         this.bindForms = this.bindForms || [];
@@ -113,6 +111,17 @@ Ext.define('Vmoss.lib.CModel', {
 //取消form绑定
     unBindForm:function (bindForm) {
         Ext.Array.remove(this.bindForms, bindForm);
+    },
+
+//绑定此模型的form的默认动作
+    formBindHandle:function (record, operation) {
+//仅当请求失败时, 将错误信息反馈给所有绑定自身的form
+        if(!operation.success){
+            var responseObj = Ext.JSON.decode(operation.response.responseText);
+            Ext.each(this.bindForms, function(bindForm){
+                bindForm.getForm().markInvalid(responseObj.errors);
+            });
+        }
     },
 
 //此方法为model实例内的某一属性与component的某一属性绑定的实现, 绑定为双向相互都能修改对方的值.
@@ -167,7 +176,6 @@ Ext.define('Vmoss.lib.CModel', {
     },
 
     componentBindHandle:function (component, success, options) {
-        console.log(success);
         Ext.Array.each(component.bindItems, function (bindItem) {
             var model = bindItem.bind,
                 componentValue;

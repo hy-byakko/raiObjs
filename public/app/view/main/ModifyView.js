@@ -29,10 +29,11 @@ Ext.define('Vmoss.view.main.ModifyView', {
                     xtype:"button",
                     text:"确定",
                     handler:function (button) {
-                        if (modelBench.getForm().isValid()) {
-                            modelBench.getForm().updateRecord(me.selInstance);
-                            me.selInstance.save();
-                        }
+                        modelBench.modelSubmit({
+                            success: function(){
+                                me.destroy();
+                            }
+                        })
                     }
                 },
                 {

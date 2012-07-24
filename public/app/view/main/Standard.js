@@ -44,7 +44,7 @@ Ext.define('Vmoss.view.main.Standard', {
                     searchInstance:instance,
                     model: me.scaffold.model,
                     featureList:featureList,
-                    buttonList:['Add', 'Modify', 'Destroy', 'View', 'Search']
+                    buttonList:['Add', 'Modify', 'Destroy', 'View']
                 })
             ]
         });

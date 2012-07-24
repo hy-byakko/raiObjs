@@ -10,6 +10,7 @@ Ext.define('Vmoss.view.main.button.GridAdd', {
 
         Ext.create('Vmoss.view.main.AddView', {
             model:grid.model,
+            grid:grid,
             instanceLabel: grid.instanceLabel,
             modelField: (grid.featureList.addFeature || grid.featureList.benchFeature)
         }).show();

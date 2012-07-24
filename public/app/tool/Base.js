@@ -12,7 +12,7 @@ Ext.define('Vmoss.Tool', {
     logEnable:false,
     requestLog: true,
 
-    function_merge:function () {
+    functionMerge:function () {
 // 将以参数形式传入的函数句柄转存为数组
         var fnc_list = [].slice.call(arguments, 0);
 // 清理未定义的参数
@@ -80,11 +80,12 @@ Ext.define('Vmoss.Tool', {
         });
     },
 
-//返回一个仅复制原对象直接属性的对象
+// 返回一个仅复制原对象直接属性的对象
     copy:function(obj){
         return Ext.merge({}, obj);
     },
 
+// 添加一个方法确保当传入arguments时, arguments的第一个参数为一个可用对象({})
     insureArg:function(firstArg, args){
         if(!firstArg) {
             firstArg = {};
@@ -123,8 +124,13 @@ Ext.Ajax.on({
     },
 // 此处处理服务器所捕获的逻辑异常
     requestcomplete:function (conn, response, options) {
-        var responseObj = Ext.JSON.decode(response.responseText);
+        var operation = options.operation,
+            responseObj = Ext.JSON.decode(response.responseText);
         if (responseObj.success) return;
+// 默认行为将会丢弃返回数据, 此处以response属性来存储
+        Ext.apply(operation, {
+            response: response
+        });
         Vmoss.Tool.promptBox(responseObj.exceptionType, responseObj.exceptionMessage);
     },
 // 此处为默认的异常提示 404/500
