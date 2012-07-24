@@ -14,6 +14,7 @@ Ext.define('Vmoss.view.main.button.GridDestroy', {
                     Ext.each(selected, function (instance) {
                         instance.destroy();
                     });
+                    grid.store.load();
                 }
             })
         } else {

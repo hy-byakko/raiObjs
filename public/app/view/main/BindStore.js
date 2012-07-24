@@ -7,8 +7,6 @@
 Ext.define('Vmoss.view.main.BindStore', {
     extend:'Vmoss.lib.CStore',
 
-    pageSize:20,
-
     constructor:function (config) {
         config = config ||{};
 

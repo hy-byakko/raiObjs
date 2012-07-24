@@ -22,8 +22,9 @@ Ext.define('Vmoss.view.main.Grid', {
         var me = this,
             options,
             store = Ext.create('Vmoss.view.main.BindStore', {
-                autoLoad: true,
+                autoLoad:true,
                 dispatch:'search',
+                pageSize:me.pageSize,
                 model:'Vmoss.model.major.' + me.model,
                 searchInstance:me.searchInstance
             });
@@ -46,7 +47,9 @@ Ext.define('Vmoss.view.main.Grid', {
                     displayMsg:'显示{2}条记录中的第{0}条到{1}条',
                     items:[
                         '-',
-                        me.sizeComboBuilder(),
+                        me.sizeComboBuilder({
+                            store: store
+                        }),
                         '-'
                     ],
                     emptyMsg:"没有符合条件的记录"
@@ -307,7 +310,10 @@ Ext.define('Vmoss.view.main.Grid', {
 //            '->'
     },
 
-    sizeComboBuilder:function () {
+    sizeComboBuilder:function (options) {
+        options = options || {};
+        var store = options.store;
+
         return Ext.create('Ext.form.field.ComboBox', {
             store:Ext.create('Ext.data.Store', {
                 fields:['abbr', 'name'],
@@ -323,7 +329,13 @@ Ext.define('Vmoss.view.main.Grid', {
             queryMode:'local',
             editable:false,
             width:80,
-            value:this.pageSize
+            value:this.pageSize,
+            listeners: {
+                select: function(combo, records, eOpts){
+                    store.pageSize = records.pop().get('abbr');
+                    store.load();
+                }
+            }
         });
     }
 });

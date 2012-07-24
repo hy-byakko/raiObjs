@@ -175,12 +175,14 @@ class BumonsController < ApplicationController
     end
   end
 
-# DELETE /bumons/1
   def destroy
-    raise
+    super
+  end
 
-    bumonsyozokus = Bumonsyozoku.find(:all, :conditions => "bumon_id = #{@bumon.id}")
-    has_child_bumon = Bumonsyozoku.find(:all, :conditions => "syozokbumon_id = #{@bumon.id} and syozokulevel > 0") #判断删除的部门是否有子部门
+# DELETE /bumons/1
+  def destroy_bk
+    bumonsyozokus = Bumonsyozoku.all(:conditions => "bumon_id = #{@bumon.id}")
+    has_child_bumon = Bumonsyozoku.all(:conditions => "syozokbumon_id = #{@bumon.id} and syozokulevel > 0") #判断删除的部门是否有子部门
     bumonsyozokus.each { |x| x.destroy } if has_child_bumon.empty?
     begin
       @bumon.destroy

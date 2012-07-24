@@ -34,6 +34,11 @@ module CoreExtension
         render extjs_struct
       end
 
+      def destroy
+        self.class.major.find(params[:id]).destroy
+        render extjs_struct
+      end
+
       def search
         struct_exec(search_condition)
       end
@@ -65,6 +70,14 @@ module CoreExtension
 
         condition_struct = condition_struct.limit(params['limit'].to_i) if params['limit']
         condition_struct = condition_struct.offset(params['start'].to_i) if params['start']
+#Todo: 设计复杂情况下排序的设计 暂时不启用
+#"sort"=>"[{\"property\":\"bumonCd\",\"direction\":\"ASC\"}
+#if params['sort']
+#  JSON.parser(params['sort']).each{|sort_unit|
+#
+#  }
+#end
+
         instances = condition_struct.all
 
         data_source = instances.inject([]) { |source, instance|
@@ -206,8 +219,8 @@ module CoreExtension
 
       def exception_render(exception)
         exception_unit = {
-          :success => false,
-          :exceptionMessage => exception.to_s
+            :success => false,
+            :exceptionMessage => exception.to_s
         }
 
         case exception
@@ -220,7 +233,7 @@ module CoreExtension
           when 'ActiveRecord::RecordInvalid'.constantize
             exception_unit[:exceptionType] = t('general.errors.title.record') # 保存记录出错
             exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid')
-# 字段映射
+                                                                              # 字段映射
             exception_unit[:errors] = self.class.mapping.ref_keys(exception.record.errors)
           else
             exception_unit[:exceptionType] = t('general.errors.title.uncatched') # 系统未捕获错误提示
