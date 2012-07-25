@@ -810,6 +810,186 @@
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/draw/engine/"
                 },
                 {
+                    "clsName": "Ext.resizer.Splitter",
+                    "name": "Splitter.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/resizer/"
+                },
+                {
+                    "clsName": "Ext.resizer.BorderSplitter",
+                    "name": "BorderSplitter.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/resizer/"
+                },
+                {
+                    "clsName": "Ext.layout.container.Border",
+                    "name": "Border.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/layout/container/"
+                },
+                {
+                    "clsName": "Ext.resizer.SplitterTracker",
+                    "name": "SplitterTracker.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/resizer/"
+                },
+                {
+                    "clsName": "Ext.resizer.BorderSplitterTracker",
+                    "name": "BorderSplitterTracker.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/resizer/"
+                },
+                {
+                    "clsName": "Ext.button.Split",
+                    "name": "Split.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/button/"
+                },
+                {
+                    "clsName": "Ext.layout.container.Form",
+                    "name": "Form.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/layout/container/"
+                },
+                {
+                    "clsName": "Ext.data.Tree",
+                    "name": "Tree.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
+                },
+                {
+                    "clsName": "Ext.data.NodeInterface",
+                    "name": "NodeInterface.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
+                },
+                {
+                    "clsName": "Ext.data.TreeStore",
+                    "name": "TreeStore.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
+                },
+                {
+                    "clsName": "Ext.panel.Table",
+                    "name": "Table.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/panel/"
+                },
+                {
+                    "clsName": "Ext.data.NodeStore",
+                    "name": "NodeStore.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
+                },
+                {
+                    "clsName": "Ext.grid.ColumnLayout",
+                    "name": "ColumnLayout.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.grid.plugin.HeaderResizer",
+                    "name": "HeaderResizer.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/plugin/"
+                },
+                {
+                    "clsName": "Ext.dd.DragZone",
+                    "name": "DragZone.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.grid.header.DragZone",
+                    "name": "DragZone.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/header/"
+                },
+                {
+                    "clsName": "Ext.dd.DDTarget",
+                    "name": "DDTarget.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.dd.ScrollManager",
+                    "name": "ScrollManager.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.dd.DropTarget",
+                    "name": "DropTarget.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.dd.Registry",
+                    "name": "Registry.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.dd.DropZone",
+                    "name": "DropZone.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/dd/"
+                },
+                {
+                    "clsName": "Ext.grid.header.DropZone",
+                    "name": "DropZone.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/header/"
+                },
+                {
+                    "clsName": "Ext.grid.plugin.HeaderReorderer",
+                    "name": "HeaderReorderer.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/plugin/"
+                },
+                {
+                    "clsName": "Ext.grid.header.Container",
+                    "name": "Container.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/header/"
+                },
+                {
+                    "clsName": "Ext.grid.ColumnComponentLayout",
+                    "name": "ColumnComponentLayout.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.grid.column.Column",
+                    "name": "Column.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/column/"
+                },
+                {
+                    "clsName": "Ext.tree.Column",
+                    "name": "Column.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/tree/"
+                },
+                {
+                    "clsName": "Ext.grid.PagingScroller",
+                    "name": "PagingScroller.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.grid.LockingView",
+                    "name": "LockingView.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.view.TableChunker",
+                    "name": "TableChunker.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/view/"
+                },
+                {
+                    "clsName": "Ext.data.proxy.Rest",
+                    "name": "Rest.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/proxy/"
+                },
+                {
+                    "clsName": "Ext.layout.container.Column",
+                    "name": "Column.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/layout/container/"
+                },
+                {
+                    "clsName": "Ext.form.FieldSet",
+                    "name": "FieldSet.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/"
+                },
+                {
+                    "clsName": "Ext.form.CheckboxManager",
+                    "name": "CheckboxManager.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/"
+                },
+                {
+                    "clsName": "Ext.layout.component.FieldSet",
+                    "name": "FieldSet.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/layout/component/"
+                },
+                {
+                    "clsName": "Ext.grid.RowNumberer",
+                    "name": "RowNumberer.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
                     "clsName": "Ext.form.FieldAncestor",
                     "name": "FieldAncestor.js",
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/"
@@ -988,6 +1168,56 @@
                     "clsName": "Ext.form.field.ComboBox",
                     "name": "ComboBox.js",
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/field/"
+                },
+                {
+                    "clsName": "Ext.view.Table",
+                    "name": "Table.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/view/"
+                },
+                {
+                    "clsName": "Ext.tree.View",
+                    "name": "View.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/tree/"
+                },
+                {
+                    "clsName": "Ext.selection.RowModel",
+                    "name": "RowModel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/selection/"
+                },
+                {
+                    "clsName": "Ext.selection.TreeModel",
+                    "name": "TreeModel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/selection/"
+                },
+                {
+                    "clsName": "Ext.tree.Panel",
+                    "name": "Panel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/tree/"
+                },
+                {
+                    "clsName": "Ext.grid.Lockable",
+                    "name": "Lockable.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.form.field.Checkbox",
+                    "name": "Checkbox.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/field/"
+                },
+                {
+                    "clsName": "Ext.grid.View",
+                    "name": "View.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.grid.Panel",
+                    "name": "Panel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/"
+                },
+                {
+                    "clsName": "Ext.selection.CheckboxModel",
+                    "name": "CheckboxModel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/selection/"
                 },
                 {
                     "clsName": "Ext.layout.container.Accordion",

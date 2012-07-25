@@ -4,7 +4,7 @@ Ext.application({
 
     controllers: [
         'Vmoss'
-    ], 
-    
+    ],
+
     autoCreateViewport: true
 });

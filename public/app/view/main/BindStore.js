@@ -25,6 +25,6 @@ Ext.define('Vmoss.view.main.BindStore', {
     buildParams:function () {
         return Ext.merge({
             dispatch:'search'
-        }, this.searchInstance.getData())
+        }, this.searchInstance.modifyValue())
     }
 });

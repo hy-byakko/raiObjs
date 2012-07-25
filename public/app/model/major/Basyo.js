@@ -20,7 +20,7 @@ Ext.define('Vmoss.model.major.Basyo', {
 
     proxy:{
         type:'rest',
-        url:'/bumons'
+        url:'/basyos'
     },
 
     fieldsExtend:[
