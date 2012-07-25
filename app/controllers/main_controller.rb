@@ -5,6 +5,9 @@ class MainController < ApplicationController
   #before_filter :authorize, :except => :login
   #protect_from_forgery :except => :login
 
+  def index
+  end
+
   def menu
     tree_panel = [ext_tree_store({
                                      :title => '自售机销售管理',

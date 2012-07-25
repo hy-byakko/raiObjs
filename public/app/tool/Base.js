@@ -111,15 +111,39 @@ Ext.define('Vmoss.Tool', {
             m.hide();
             m.slideIn('t').ghost("t", { delay: 1500, remove: true});
         };
+    }(),
+
+    csrfToken:function () {
+        var result = {},
+            metas = Ext.dom.Query.select('meta'),
+            param,
+            token;
+
+        Ext.each(Ext.dom.Query.select('meta'), function (meta) {
+            switch(meta.name){
+                case 'csrf-param':
+                    param = meta.content;
+                    break;
+                case 'csrf-token':
+                    token = meta.content;
+                    break;
+            }
+        });
+
+        result[param] = token;
+        return result;
     }()
 });
-
 
 Ext.Ajax.on({
 // 记录本程序向服务器发起的所有请求
     beforerequest:function (conn, options) {
         if (Vmoss.Tool.requestLog){
             Vmoss.Tool.log([conn, 'Requesting']);
+        }
+        if(options.method !== 'GET'){
+            options.params = options.params || {};
+            Ext.mergeIf(options.params, Vmoss.Tool.csrfToken);
         }
     },
 // 此处处理服务器所捕获的逻辑异常
