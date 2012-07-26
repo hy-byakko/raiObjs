@@ -3,19 +3,20 @@ Ext.define('Vmoss.model.major.Basyo', {
 
     fields:[
         'id',
-        {name:'basyoCd', type:'string'},
-        {name:'basyoName', type:'string'},
-        {name:'customerId', type:'string'},
-        {name:'customerName', type:'string'},
-        {name:'vmId', type:'string'},
-        {name:'vmName', type:'string'},
-        {name:'kind', type:'string', persist: false},
-        {name:'parentId', type:'string'},
-        {name:'parent', type:'string', persist: false},
-        {name:'yubinNo', type:'string'},
-        {name:'telNo', type:'string'},
-        {name:'faxNo', type:'string'},
-        {name:'jusyo', type:'string'}
+        'basyoCd',
+        'basyoName',
+        'customerId',
+        {name:'customerName', type:'string', persist: false},
+        'vmId',
+        {name:'vmCd', type:'string', persist: false},
+        'bumonId',
+        {name:'bumonName', type:'string', persist: false},
+        'eigyotantoId',
+        {name:'eigyotantoName', type:'string', persist: false},
+        'sagyotantoId',
+        {name:'sagyotantoName', type:'string', persist: false},
+        'rirekiKaisiDtm',
+        'rirekiSyuryoDtm'
     ],
 
     proxy:{
@@ -24,13 +25,14 @@ Ext.define('Vmoss.model.major.Basyo', {
     },
 
     fieldsExtend:[
-        {field:'bumonCd', label:'部门编号'},
-        {field:'bumonMei', label:'部门名称'},
-        {field:'kind', label:'部门类别', ref:'bumonlevelId'},
-        {field:'parent', label:'上级部门', ref:'parentId'},
-        {field:'yubinNo', label:'邮编'},
-        {field:'telNo', label:'电话'},
-        {field:'faxNo', label:'传真'},
-        {field:'jusyo', label:'地址'}
+        {field:'basyoCd', label:'点位编号'},
+        {field:'basyoName', label:'点位名称'},
+        {field:'customerName', label:'客户', ref:'customerId'},
+        {field:'vmCd', label:'自售机', ref:'vmId'},
+        {field:'bumonName', label:'部门', ref:'bumonId'},
+        {field:'eigyotantoName', label:'营业担当者', ref:'eigyotantoId'},
+        {field:'sagyotantoName', label:'巡回担当者', ref:'sagyotantoId'},
+        {field:'rirekiKaisiDtm', label:'履历终了时刻'},
+        {field:'rirekiSyuryoDtm', label:'履历开始时刻'}
     ]
 });

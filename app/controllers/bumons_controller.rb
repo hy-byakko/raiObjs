@@ -31,9 +31,8 @@ class BumonsController < ApplicationController
           :bumon_mei => {
               :seek_by => :similar
           },
-          :parent_id => {
-              :set_method => 'ignore_me',
-              :get_method => 'cyokuzoku_bumon'
+          :customerName => {
+              :get => 'syozokubumonlist'
           },
           :parent => {
               :get => 'syozokubumonlist'

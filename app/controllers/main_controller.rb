@@ -23,7 +23,7 @@ class MainController < ApplicationController
                                              {:text => '系统分类基础信息管理', :leaf => true, :controller => 'kinds'}
                                          ]},
                                          {:text => '自售机设置信息管理', :leaf => false, :singleClickExpand => true, :children => [
-                                             {:text => '点位基础信息管理', :leaf => true, :controller => 'basyos'}
+                                             {:text => '点位基础信息管理', :leaf => true, :model => 'Basyo'}
                                          ]},
                                          {:text => '自售机销售信息管理', :leaf => false, :singleClickExpand => true, :children => [
                                              {:text => '全项服务作业信息管理', :leaf => true, :controller => 'uriagefulls'}

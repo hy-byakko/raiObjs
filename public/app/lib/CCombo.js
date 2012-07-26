@@ -14,6 +14,10 @@ Ext.define('Vmoss.lib.CCombo', {
     minChars:0,
     pageSize:10,
 
+    forceSelection:true,
+    selectOnFocus:true,
+    editable:true,
+
     initComponent:function () {
         Vmoss.Tool.log('CCombo running.');
 

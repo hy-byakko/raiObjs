@@ -4,11 +4,79 @@ class BasyosController < ApplicationController
   #before_filter :set_for_copy_basyo, :only => [:new]
   #before_filter :get_combox_store, :only => [:index, :new, :edit, :show]
 
+  self.mapping_override(
+      {
+          :basyo_cd => {
+              :seek_by => :similar
+          },
+          :basyo_name => {
+              :seek_by => :similar
+          },
+          :customer_name => {
+              :get => 'custom.customer_name'
+          },
+          :vm_cd => {
+              :get => 'vm.vm_cd'
+          },
+          :bumon_name => {
+              :get => 'bumon.bumon_mei'
+          },
+          :eigyotanto_name => {
+              :get => 'eigyotanto.user_name'
+          },
+          :sagyotanto_name => {
+              :get => 'sagyotanto.user_name'
+          }
+      }
+  )
 
+  def get_customer
+      struct_exec(query_condition(Custom, ['customer_name'])) { |instance|
+        [
+            instance.id,
+            instance.customer_name
+        ]
+      }
+  end
 
+  def get_bumon
+      struct_exec(query_condition(Bumon, ['bumon_mei'])) { |instance|
+        [
+            instance.id,
+            instance.bumon_mei
+        ]
+      }
+  end
 
-  # GET /basyos
-  # GET /basyos.ext_json
+  def get_vm
+      struct_exec(query_condition(Vm, ['vm_cd'])) { |instance|
+        [
+            instance.id,
+            instance.vm_cd
+        ]
+      }
+  end
+
+  def get_eigyotanto
+      struct_exec(query_condition(User, ['user_name'])) { |instance|
+        [
+            instance.id,
+            instance.user_name
+        ]
+      }
+  end
+
+  def get_sagyotanto
+      struct_exec(query_condition(User, ['user_name'])) { |instance|
+        [
+            instance.id,
+            instance.user_name
+        ]
+      }
+    end
+
+# GET /basyos
+# GET /basyos.ext_json
   def index
     ##现在时间取得
     #@date =Date.today.to_s

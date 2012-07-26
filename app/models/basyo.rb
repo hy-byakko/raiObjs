@@ -14,8 +14,8 @@ class Basyo < ActiveRecord::Base
   belongs_to :vm
   belongs_to :gyomukind, :foreign_key => "gyomukind_id"
   belongs_to :rirekikind, :foreign_key => "rirekikind_id"
-  belongs_to :eigyotantouser, :foreign_key => "eigyotanto_id"
-  belongs_to :sagyotantouser, :foreign_key => "sagyotanto_id"
+  belongs_to :eigyotanto, :class_name => 'User', :foreign_key => "eigyotanto_id"
+  belongs_to :sagyotanto, :class_name => 'User', :foreign_key => "sagyotanto_id"
   belongs_to :datacollectwaykind, :foreign_key => "datacollectway_id"
 
   has_many :uriagefulls
@@ -27,6 +27,13 @@ class Basyo < ActiveRecord::Base
   #has_many :persyohindayuris, :primary_key => "basyo_cd",:foreign_key => "basyo_cd"
   #20120511 added end
 
+  def rireki_kaisi_dtm
+    DateTime.parse(read_attribute(:rireki_kaisi_dtm)).to_time.strftime('%Y/%m/%d %H:%M:%S')
+  end
+
+  def rireki_syuryo_dtm
+    DateTime.parse(read_attribute(:rireki_syuryo_dtm)).to_time.strftime('%Y/%m/%d %H:%M:%S')
+  end
   # 
   def culist(flag=true)
     if flag

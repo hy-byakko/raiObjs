@@ -22,12 +22,15 @@ Ext.define('Vmoss.view.main.Grid', {
         var me = this,
             options,
             store = Ext.create('Vmoss.view.main.BindStore', {
-                autoLoad:true,
+//                autoLoad:true,
                 dispatch:'search',
                 pageSize:me.pageSize,
                 model:'Vmoss.model.major.' + me.model,
                 searchInstance:me.searchInstance
             });
+
+// store强制读取, 触发时机先于autoLoad
+        store.load();
 
         options = {
             selModel: Ext.create('Ext.selection.CheckboxModel'),

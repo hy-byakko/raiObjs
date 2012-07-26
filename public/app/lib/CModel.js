@@ -213,5 +213,16 @@ Ext.define('Vmoss.lib.CModel', {
         } else {
             item[method] = newValue;
         }
+    },
+
+    modifyValue: function(){
+        var me = this,
+            result = {};
+
+        for(var key in me.modified){
+            result[key] = me.get(key);
+        }
+
+        return result;
     }
 });
