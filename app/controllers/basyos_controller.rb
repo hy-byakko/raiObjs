@@ -26,9 +26,22 @@ class BasyosController < ApplicationController
           },
           :sagyotanto_name => {
               :get => 'sagyotanto.user_name'
+          },
+          :rireki_dtm => {
+              :type => :logic,
+              :conditions => 'in_rireki'
           }
       }
   )
+
+  def in_rireki
+    [
+        'rireki_kaisi_dtm <= :rireki_dtm AND rireki_syuryo_dtm <= :rireki_dtm',
+        {
+            :rireki_dtm => params[:rirekiDtm]
+        }
+    ]
+  end
 
   def get_customer
       struct_exec(query_condition(Custom, ['customer_name'])) { |instance|

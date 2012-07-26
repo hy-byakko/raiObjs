@@ -39,7 +39,7 @@ class ExtMapping
   end
 
   def add_condition(condition_struct, options = {})
-    available_unit(options[:scope].params).each { |unit|
+    available_units(options).each { |unit|
       condition_struct = unit.add_condition(
           condition_struct,
           :controller => options[:scope]
@@ -57,7 +57,7 @@ class ExtMapping
   end
 
   def default_struct(instance, options = {})
-    @unit_pool.inject({}) { |source, unit|
+    available_units(options.merge({:motion => :get})).inject({}) { |source, unit|
       unit.struct_value(
           source,
           :model => instance,
@@ -68,7 +68,7 @@ class ExtMapping
   end
 
   def mapping_attr(options = {})
-    available_unit(options[:scope].params).each{|unit|
+    available_units(options.merge({:motion => :set})).each{|unit|
       unit.mapping_to_model(
           :model => options[:model],
           :controller => options[:scope]
@@ -76,9 +76,14 @@ class ExtMapping
     }
   end
 
-  def available_unit(source)
+  def available_units(options = {})
     @unit_pool.select {|unit|
-      !source[unit.ref.to_sym].blank?
+      unit.available(
+          {
+              :motion => options[:motion],
+              :controller => options[:scope]
+          }
+      )
     }
   end
 end

@@ -1,19 +1,28 @@
 # encoding: utf-8
 class MappingUnit
-#默认映射动作, 对应的值为未指定时的默认值
+# 默认映射动作, 对应的值为未指定时的默认值
   MOTION = [
-#远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名
+# 远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名
       :set,
-      #本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
+# 本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
       :get
+  ]
+
+  TYPE = [
+      :persist,        # 持续型:参与所有的行为
+      :expand,         # 展开型:仅参与与bench相关映射
+      :logic,          # 逻辑型:不参与set/get
+      :ignore          # 忽略型:不参与所有的映射
   ]
 
 # require option :name
   def initialize(options = {})
     @name = options[:name]
 
-#远程模型的字段名, 取值/赋值时皆调用此字段
+# 远程模型的字段名, 取值/赋值时皆调用此字段
     @ref = (options[:ref] || to_ext_name(options[:name]))
+# 默认类型为持续型
+    @type = (options[:type] || :persist)
 
     motion_init(options)
     condition_init(options)
@@ -125,6 +134,23 @@ class MappingUnit
       }
       depend_on[@get.to_sym] = @suf_cond.gsub(/:depend/, depend_on[@get.to_sym]) if @suf_cond
       @pre_cond ? condition.where([@pre_cond, depend_on]) : condition.where(depend_on)
+    end
+  end
+
+  def available(options = {})
+    case @type
+      when :persist
+# 仅当以index动作进入(查询)并且查询内容为空时, persist类型无效
+        !(options[:controller].action_name == 'index' && options[:controller].params[@ref.to_sym].blank?)
+      when :expand
+# 仅当以show, create, update动作进入时, expand类型起效
+        ['show', 'create', 'update'].include? options[:controller].action_name
+      when :logic
+# 仅当以index动作进入并且非set/get时, logic类型起效
+        options[:controller].action_name == 'index' && !MOTION.include?(options[:motion])
+      else
+# 其余默认无效
+        false
     end
   end
 
