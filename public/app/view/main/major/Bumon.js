@@ -34,11 +34,7 @@ Ext.define('Vmoss.view.main.major.Bumon', {
         {
             field:'bumonlevelId',
             xtype:'ccombo',
-            dispatch:'get_bumon_data',
-
-            forceSelection:true,
-            selectOnFocus:true,
-            editable:true
+            dispatch:'get_bumon_data'
         },
         {
             field:'parentId',
@@ -46,11 +42,7 @@ Ext.define('Vmoss.view.main.major.Bumon', {
             dispatch:'get_parent_data',
             requestParams:[
                 'id'
-            ],
-
-            forceSelection:true,
-            selectOnFocus:true,
-            editable:true
+            ]
         },
         'yubinNo',
         'telNo',

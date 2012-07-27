@@ -31,7 +31,7 @@ class BumonsController < ApplicationController
           :bumon_mei => {
               :seek_by => :similar
           },
-          :customerName => {
+          :customer_name => {
               :read_only => true,
               :get => 'syozokubumonlist'
           },

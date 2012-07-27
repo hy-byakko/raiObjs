@@ -139,8 +139,8 @@ Ext.define('Vmoss.view.main.Grid', {
 //            {
 //                text:"导出",
 //                tooltip:"导出符合检索条件的",
-////                hidden:ExportHiddenFlag,
-////                iconCls:"icon-export",
+//                  hidden:ExportHiddenFlag,
+//                  iconCls:"icon-export",
 //                handler:function () {
 //                    Ext.Msg.confirm("提示!", "您确定要导出吗?&nbsp;&nbsp;&nbsp;&nbsp;", function (btn) {
 //                        if (btn == "yes") {
