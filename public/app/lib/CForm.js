@@ -141,5 +141,20 @@ Ext.define('Vmoss.lib.CForm', {
         });
 
         return item;
+    },
+
+    extendValues: function(){
+        var me = this,
+            formValues = me.getValues(),
+            field,
+            result = {};
+
+        for (field in formValues) {
+            if(!Ext.Array.contains(me.bind.fields.keys, field)){
+                result[field] = formValues[field];
+            }
+        }
+
+        return result;
     }
 });

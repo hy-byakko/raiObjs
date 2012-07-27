@@ -35,8 +35,8 @@ Ext.define('Vmoss.view.main.major.Basyo', {
             field:'rirekiDtm',
             xtype:'datefield',
             label:'作业日',
-            value:new Date(),
-            format:'Y/m/d'
+            format:'Y/m/d',
+            value:Ext.Date.format(new Date(), 'Y/m/d')
         }
     ],
 

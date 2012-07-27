@@ -6,15 +6,15 @@ Ext.define('Vmoss.model.major.Basyo', {
         'basyoCd',
         'basyoName',
         'customerId',
-        {name:'customerName', type:'string', persist: false},
+        {name:'customerName',persist: false},
         'vmId',
-        {name:'vmCd', type:'string', persist: false},
+        {name:'vmCd', persist: false},
         'bumonId',
-        {name:'bumonName', type:'string', persist: false},
+        {name:'bumonName', persist: false},
         'eigyotantoId',
-        {name:'eigyotantoName', type:'string', persist: false},
+        {name:'eigyotantoName', persist: false},
         'sagyotantoId',
-        {name:'sagyotantoName', type:'string', persist: false},
+        {name:'sagyotantoName', persist: false},
         'rirekiKaisiDtm',
         'rirekiSyuryoDtm'
     ],
@@ -32,7 +32,7 @@ Ext.define('Vmoss.model.major.Basyo', {
         {field:'bumonName', label:'部门', ref:'bumonId'},
         {field:'eigyotantoName', label:'营业担当者', ref:'eigyotantoId'},
         {field:'sagyotantoName', label:'巡回担当者', ref:'sagyotantoId'},
-        {field:'rirekiKaisiDtm', label:'履历终了时刻'},
-        {field:'rirekiSyuryoDtm', label:'履历开始时刻'}
+        {field:'rirekiKaisiDtm', label:'履历开始时刻'},
+        {field:'rirekiSyuryoDtm', label:'履历终了时刻'}
     ]
 });

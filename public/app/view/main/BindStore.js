@@ -25,6 +25,10 @@ Ext.define('Vmoss.view.main.BindStore', {
     buildParams:function () {
         return Ext.merge({
             dispatch:'search'
-        }, this.searchInstance.modifyValue())
+        },
+            this.searchInstance.modifyValue(),
+// searchInstance应仅存在一个form与之绑定
+            this.searchInstance.bindForms[0].extendValues()
+        )
     }
 });

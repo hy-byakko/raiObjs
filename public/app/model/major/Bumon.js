@@ -3,16 +3,16 @@ Ext.define('Vmoss.model.major.Bumon', {
 
     fields:[
         'id',
-        {name:'bumonCd', type:'string'},
-        {name:'bumonMei', type:'string'},
-        {name:'bumonlevelId', type:'string'},
-        {name:'kind', type:'string', persist: false},
-        {name:'parentId', type:'string'},
-        {name:'parent', type:'string', persist: false},
-        {name:'yubinNo', type:'string'},
-        {name:'telNo', type:'string'},
-        {name:'faxNo', type:'string'},
-        {name:'jusyo', type:'string'}
+        'bumonCd',
+        'bumonMei',
+        'bumonlevelId',
+        {name:'kind', persist: false},
+        'parentId',
+        {name:'parent', persist: false},
+        'yubinNo',
+        'telNo',
+        'faxNo',
+        'jusyo'
     ],
 
     proxy:{

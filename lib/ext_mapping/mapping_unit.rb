@@ -30,6 +30,7 @@ class MappingUnit
 
   def override(options)
     @ref = options[:ref] if options[:ref]
+    @type = options[:type] if options[:type]
     motion_init(options)
     condition_init(options)
   end
@@ -125,6 +126,8 @@ class MappingUnit
   end
 
   def add_condition(condition, options = {})
+# 默认无数据回传的查询条件不起效
+    return condition if options[:controller].params[@ref.to_sym].blank?
     if @conditions
       condition.where(
           options[:controller].send(@conditions.to_sym)) if @conditions
@@ -140,8 +143,8 @@ class MappingUnit
   def available(options = {})
     case @type
       when :persist
-# 仅当以index动作进入(查询)并且查询内容为空时, persist类型无效
-        !(options[:controller].action_name == 'index' && options[:controller].params[@ref.to_sym].blank?)
+# persist类型全域起效
+        true
       when :expand
 # 仅当以show, create, update动作进入时, expand类型起效
         ['show', 'create', 'update'].include? options[:controller].action_name

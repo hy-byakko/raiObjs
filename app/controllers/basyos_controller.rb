@@ -30,15 +30,21 @@ class BasyosController < ApplicationController
           :rireki_dtm => {
               :type => :logic,
               :conditions => 'in_rireki'
+          },
+          :turikin => {
+              :type => :ignore
+          },
+          :vmanzenzaikosu => {
+              :type => :ignore
           }
       }
   )
 
   def in_rireki
     [
-        'rireki_kaisi_dtm <= :rireki_dtm AND rireki_syuryo_dtm <= :rireki_dtm',
+        'rireki_kaisi_dtm <= :rireki_dtm AND rireki_syuryo_dtm >= :rireki_dtm',
         {
-            :rireki_dtm => params[:rirekiDtm]
+            :rireki_dtm => Date.parse(params[:rirekiDtm]).to_s(:number)
         }
     ]
   end

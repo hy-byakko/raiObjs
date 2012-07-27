@@ -55,7 +55,7 @@ Ext.define('Vmoss.lib.CCombo', {
         me.on({
             keyup:function () {
                 if (me.getRawValue() === '') {
-                    me.setValue('');
+                    me.setValue(null);
                 }
             }
         });

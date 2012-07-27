@@ -50,11 +50,5 @@ Ext.define('Vmoss.controller.Vmoss', {
 
     mainBuilder:function(tree, instance){
         this.getMainView().createPanel(instance.raw);
-    },
-    
-    onSideBarSelectionChange: function(view, records) {
-        if (records.length) {
-            this.showBook(records[0]);
-        }
     }
 });
