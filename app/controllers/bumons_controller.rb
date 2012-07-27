@@ -32,12 +32,15 @@ class BumonsController < ApplicationController
               :seek_by => :similar
           },
           :customerName => {
+              :read_only => true,
               :get => 'syozokubumonlist'
           },
           :parent => {
+              :read_only => true,
               :get => 'syozokubumonlist'
           },
           :kind => {
+              :read_only => true,
               :get => 'kind.kind_name'
           }
       }

@@ -23,14 +23,16 @@ class MappingUnit
     @ref = (options[:ref] || to_ext_name(options[:name]))
 # 默认类型为持续型
     @type = (options[:type] || :persist)
+    @read_only = options[:read_only]
 
     motion_init(options)
     condition_init(options)
   end
 
   def override(options)
-    @ref = options[:ref] if options[:ref]
-    @type = options[:type] if options[:type]
+    [:ref, :type, :read_only].each{|attr|
+      self.send((attr.to_s + '=').to_sym, options[attr]) if options[attr]
+    }
     motion_init(options)
     condition_init(options)
   end
@@ -119,7 +121,7 @@ class MappingUnit
     source = options[:controller].params
     case @set_scope
       when :model
-        options[:model].send((@set.to_s + '=').to_sym, source[@ref.to_sym])
+        options[:model].send((@set.to_s + '=').to_sym, source[@ref.to_sym]) if source.has_key?(@ref.to_sym)
       when :controller
         options[:controller].send(@set.to_sym, options[:model])
     end
@@ -143,11 +145,13 @@ class MappingUnit
   def available(options = {})
     case @type
       when :persist
-# persist类型全域起效
-        true
+# persist类型全域起效, 仅当unit为read_only时当set无效
+        !(options[:motion] == :set && @read_only)
       when :expand
-# 仅当以show, create, update动作进入时, expand类型起效
-        ['show', 'create', 'update'].include? options[:controller].action_name
+# 仅当以show动作, 或非read_only时的create, update动作进入, expand类型起效
+        options[:controller].action_name == 'show' ||
+            (['create', 'update'].include?(options[:controller].action_name) &&
+                !(options[:motion] == :set && @read_only))
       when :logic
 # 仅当以index动作进入并且非set/get时, logic类型起效
         options[:controller].action_name == 'index' && !MOTION.include?(options[:motion])
@@ -157,5 +161,5 @@ class MappingUnit
     end
   end
 
-  attr_accessor :name, :set, :get, :ref, :conditions, :set_scope, :get_scope
+  attr_accessor :name, :set, :get, :ref, :conditions, :set_scope, :get_scope, :type, :read_only
 end

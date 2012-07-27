@@ -116,7 +116,7 @@ Ext.define('Vmoss.lib.CModel', {
 //绑定此模型的form的默认动作
     formBindHandle:function (record, operation) {
 //仅当请求失败时, 将错误信息反馈给所有绑定自身的form
-        if(!operation.success){
+        if(!operation.success && operation.response){
             var responseObj = Ext.JSON.decode(operation.response.responseText);
             Ext.each(this.bindForms, function(bindForm){
                 bindForm.getForm().markInvalid(responseObj.errors);

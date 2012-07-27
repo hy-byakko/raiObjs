@@ -28,7 +28,7 @@ Ext.define('Vmoss.view.main.Standard', {
             title:title,
             items:[
                 Ext.create('Ext.form.FieldSet', {
-                        layout:'fit',
+//                        layout:'fit',
                         title:'检索条件',
                         collapsible:true,
                         autoHeight:true,
