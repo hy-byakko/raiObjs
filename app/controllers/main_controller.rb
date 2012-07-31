@@ -12,7 +12,7 @@ class MainController < ApplicationController
     tree_panel = [ext_tree_store({
                                      :title => '自售机销售管理',
                                      :children => [
-                                         {:text => '自售机销售相关基础信息管理', :leaf => false, :singleClickExpand => true, :children => [
+                                         {:text => '自售机销售相关基础信息管理', :leaf => false, :children => [
                                              {:text => '部门基础信息管理', :leaf => true, :model => 'Bumon'},
                                              {:text => '用户基础信息管理', :leaf => true, :controller => 'users'},
                                              {:text => '客户基础信息管理', :leaf => true, :controller => 'customs'},

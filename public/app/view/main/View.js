@@ -9,12 +9,25 @@ Ext.define('Vmoss.view.main.View', {
         Ext.create('Vmoss.view.main.Welcome')
     ],
 
-    createPanel:function (config) {
+    openPanel:function (config) {
         var me = this,
-            newView = Ext.create('Vmoss.view.main.major.' + config.model, {
-            scaffold:config
+            panel,
+            item = me.items.items || [];
+
+        Ext.each(item, function(tab){
+            if(tab.scaffold && tab.scaffold === config){
+                panel = tab;
+                return false;
+            }
         });
-        me.add(newView);
-        me.setActiveTab(newView);
+
+        if(!panel){
+            panel = Ext.create('Vmoss.view.main.major.' + config.model, {
+                scaffold:config
+            });
+            me.add(panel);
+        }
+
+        me.setActiveTab(panel);
     }
 });

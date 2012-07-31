@@ -7,7 +7,7 @@
     background-image: url(../images/stop.png) !important;
 }
 
-.icon-Change {
+.icon-change {
     background-image: url(../images/edit.png) !important;
 }
 
@@ -33,6 +33,14 @@
 
 .icon-view {
     background-image: url(../images/view.png) !important;
+}
+
+.icon-save {
+    background-image: url(../images/disk.png) !important;
+}
+
+.icon-back {
+    background-image: url(../images/back.png) !important;
 }
 
 #prompt-box-div {

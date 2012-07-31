@@ -29,10 +29,11 @@ Ext.define('Vmoss.view.main.AddView', {
             buttons:[
                 {
                     xtype:"button",
-                    text:"确定",
+                    text:"保存",
+                    iconCls:'icon-save',
                     handler:function () {
                         modelBench.modelSubmit({
-                            success: function(){
+                            success:function () {
                                 me.destroy();
                                 me.grid.store.load();
                             }
@@ -41,7 +42,28 @@ Ext.define('Vmoss.view.main.AddView', {
                 },
                 {
                     xtype:"button",
+                    text:"继续添加",
+                    iconCls:'icon-add',
+                    handler:function () {
+                        modelBench.modelSubmit({
+                            success:function () {
+                                me.destroy();
+                                me.grid.store.load();
+
+                                Ext.create('Vmoss.view.main.AddView', {
+                                    model:me.model,
+                                    grid:me.grid,
+                                    instanceLabel:me.instanceLabel,
+                                    modelField:me.modelField
+                                }).show();
+                            }
+                        });
+                    }
+                },
+                {
+                    xtype:"button",
                     text:"取消",
+                    iconCls:'icon-back',
                     handler:function (button) {
                         me.destroy();
                     }

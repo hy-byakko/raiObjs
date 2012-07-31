@@ -2,7 +2,7 @@ Ext.define('Vmoss.view.main.button.GridModify', {
     extend:'Ext.button.Button',
 
     text:'修改',
-    iconCls:"icon-Change",
+    iconCls:"icon-change",
 
 //icon:Ext.MessageBox.ERROR
     handler:function () {

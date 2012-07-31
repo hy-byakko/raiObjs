@@ -85,6 +85,10 @@ Ext.define('Vmoss.lib.CForm', {
             this.getForm().updateRecord(this.bind);
             this.bind.save(options);
         }
+        else
+        {
+            Vmoss.Tool.promptBox('保存出错', '项目输入错误, 请依提示输入正确内容');
+        }
     },
 
 // 以所绑定的实例为基础创建相应的field

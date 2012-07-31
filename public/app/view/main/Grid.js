@@ -16,7 +16,8 @@ Ext.define('Vmoss.view.main.Grid', {
     setLoading:true,
     autoScroll:true,
     border:false,
-    pageSize:20,
+    pageSize:40,
+    flex:1,
 
     initComponent:function () {
         var me = this,

@@ -15,6 +15,7 @@ Ext.define('Vmoss.view.main.BindStore', {
 
         if(searchInstance){
             searchInstance.on('afterset', function(){
+                me.currentPage = 1;
                 me.load();
             });
         }

@@ -27,7 +27,8 @@ Ext.define('Vmoss.view.main.ModifyView', {
             buttons:[
                 {
                     xtype:"button",
-                    text:"确定",
+                    text:"保存",
+                    iconCls:'icon-save',
                     handler:function (button) {
                         modelBench.modelSubmit({
                             success: function(){
@@ -39,6 +40,7 @@ Ext.define('Vmoss.view.main.ModifyView', {
                 {
                     xtype:"button",
                     text:"取消",
+                    iconCls:'icon-back',
                     handler:function (button) {
                         me.destroy();
                     }

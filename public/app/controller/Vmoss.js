@@ -49,6 +49,16 @@ Ext.define('Vmoss.controller.Vmoss', {
     },
 
     mainBuilder:function(tree, instance){
-        this.getMainView().createPanel(instance.raw);
+        if (instance.data.leaf){
+            this.getMainView().openPanel(instance.raw);
+        }
+        else{
+            if(instance.isExpanded()){
+                instance.collapse();
+            }
+            else{
+                instance.expand();
+            }
+        }
     }
 });

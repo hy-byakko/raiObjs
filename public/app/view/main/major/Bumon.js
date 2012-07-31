@@ -9,11 +9,7 @@ Ext.define('Vmoss.view.main.major.Bumon', {
         {
             field:'bumonlevelId',
             xtype:'ccombo',
-            dispatch:'get_bumon_data',
-
-            forceSelection:true,
-            selectOnFocus:true,
-            editable:true
+            dispatch:'get_bumon_data'
         }
     ],
 
@@ -47,6 +43,6 @@ Ext.define('Vmoss.view.main.major.Bumon', {
         'yubinNo',
         'telNo',
         'faxNo',
-        'jusyo'
+        {field:'jusyo', xtype:'textfield',  columnWidth: 2/3}
     ]
 });
