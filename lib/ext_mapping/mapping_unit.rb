@@ -25,8 +25,12 @@ class MappingUnit
     @type = (options[:type] || :persist)
     @read_only = options[:read_only]
 
-    motion_init(options)
-    condition_init(options)
+    if options[:association]
+      @association_mapping
+    else
+      motion_init(options)
+      condition_init(options)
+    end
   end
 
   def override(options)

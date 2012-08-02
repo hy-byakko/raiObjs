@@ -18,7 +18,7 @@ Ext.define('Vmoss.view.main.button.GridModify', {
                 selInstance:selected[0],
                 instanceLabel: grid.instanceLabel,
                 modelField: (grid.featureList.modfiyFeature || grid.featureList.benchFeature)
-            }).show();
+            }).editVersion().show();
         }
     },
 

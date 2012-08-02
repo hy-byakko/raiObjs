@@ -13,30 +13,45 @@ Ext.define('Vmoss.view.main.ModifyView', {
 
     initComponent:function () {
         var me = this,
-            options,
             modelBench = Ext.create('Vmoss.view.main.ModelBench', {
                 bind:me.selInstance,
                 modelField:me.modelField
+            }),
+            editButton = Ext.create('Ext.button.Button', {
+                text:"修改",
+                iconCls:'icon-change',
+                handler:function (button) {
+                    me.editVersion();
+                }
+            }),
+            saveButton = Ext.create('Ext.button.Button', {
+                text:"保存",
+                iconCls:'icon-save',
+                handler:function (button) {
+                    modelBench.modelSubmit({
+                        success:function () {
+                            me.destroy();
+                        }
+                    })
+                }
             });
 
-        options = {
+        var a = Ext.ModelManager.getModel(me.selInstance.modelName).load(me.selInstance.getId(), {
+            success:function (bumon) {
+                console.log(bumon);
+            }});
+
+        Ext.apply(me, {
             title:'修改' + me.instanceLabel,
             items:[
                 modelBench
             ],
+            modelBench:modelBench,
+            editButton:editButton,
+            saveButton:saveButton,
             buttons:[
-                {
-                    xtype:"button",
-                    text:"保存",
-                    iconCls:'icon-save',
-                    handler:function (button) {
-                        modelBench.modelSubmit({
-                            success: function(){
-                                me.destroy();
-                            }
-                        })
-                    }
-                },
+                editButton,
+                saveButton,
                 {
                     xtype:"button",
                     text:"取消",
@@ -46,10 +61,22 @@ Ext.define('Vmoss.view.main.ModifyView', {
                     }
                 }
             ]
-        }
-
-        Ext.apply(me, options);
+        });
 
         me.callParent(arguments);
+    },
+
+    viewVersion:function () {
+        this.editButton.show();
+        this.saveButton.hide();
+        this.modelBench.disable();
+        return this;
+    },
+
+    editVersion:function () {
+        this.editButton.hide();
+        this.saveButton.show();
+        this.modelBench.enable();
+        return this;
     }
 });

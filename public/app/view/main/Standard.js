@@ -16,6 +16,7 @@ Ext.define('Vmoss.view.main.Standard', {
     },
     frame:true,
     closable:true,
+    buttonList:['Add', 'Modify', 'Destroy', 'View'],
 
     initComponent:function () {
         Vmoss.Tool.log('Standard running.');
@@ -46,7 +47,7 @@ Ext.define('Vmoss.view.main.Standard', {
                     searchInstance:instance,
                     model:me.scaffold.model,
                     featureList:featureList,
-                    buttonList:['Add', 'Modify', 'Destroy', 'View']
+                    buttonList:me.buttonList
                 })
             ]
         });

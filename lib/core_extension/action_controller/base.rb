@@ -70,7 +70,7 @@ module CoreExtension
 
         condition_struct = condition_struct.limit(params['limit'].to_i) if params['limit']
         condition_struct = condition_struct.offset(params['start'].to_i) if params['start']
-#Todo: 设计复杂情况下排序的设计 暂时不启用
+#Todo: 涉及复杂情况下排序的设计 暂时不启用
 #"sort"=>"[{\"property\":\"bumonCd\",\"direction\":\"ASC\"}
 #if params['sort']
 #  JSON.parser(params['sort']).each{|sort_unit|

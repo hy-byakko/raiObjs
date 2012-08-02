@@ -4,7 +4,7 @@ class BasyosController < ApplicationController
   #before_filter :set_for_copy_basyo, :only => [:new]
   #before_filter :get_combox_store, :only => [:index, :new, :edit, :show]
 
-  self.mapping_override(
+  mapping_override(
       {
           :basyo_cd => {
               :seek_by => :similar
@@ -36,6 +36,15 @@ class BasyosController < ApplicationController
           },
           :vmanzenzaikosu => {
               :type => :ignore
+          },
+          :vmcolumns => {
+              :association => :vmcolumns,
+              :type => :expand,
+              :mapping_override => {
+                  :group_no => {
+                      :type => :ignore
+                  }
+              }
           }
       }
   )
@@ -120,12 +129,12 @@ class BasyosController < ApplicationController
 
   # GET /basyos/1
   def show
-    @basyo_id = @basyo.id
-    @gymuid =Gyomukind.find(:all).first.id
-    getPaykind
-
-    @datacollectwaykindList = get_combo_list(Datacollectwaykind, 'id', 'kind_name')
-
+    #@basyo_id = @basyo.id
+    #@gymuid =Gyomukind.find(:all).first.id
+    #getPaykind
+    #
+    #@datacollectwaykindList = get_combo_list(Datacollectwaykind, 'id', 'kind_name')
+    super
   end
 
   #复制添加的场合

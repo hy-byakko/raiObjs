@@ -5,24 +5,19 @@ Ext.define('Vmoss.view.main.button.GridView', {
     iconCls:"icon-view",
 
     handler:function () {
-        var selected = grid.getSelectionModel().getSelections();
+        var grid = this,
+            selected = grid.selModel.getSelection();
+
         if (selected.length == 0) {
-            Ext.MessageBox.show({
-                title:'错误信息',
-                msg:'请选择' + objName + '!',
-                buttons:Ext.MessageBox.OK,
-                icon:Ext.MessageBox.ERROR
-            });
+            Vmoss.Tool.promptBox('错误操作', '请选择!');
         } else if (selected.length > 1) {
-            Ext.MessageBox.show({
-                title:'错误信息',
-                msg:'请选择一个' + objName + '进行查看!',
-                buttons:Ext.MessageBox.OK,
-                icon:Ext.MessageBox.ERROR
-            });
+            Vmoss.Tool.promptBox('错误操作', '请选择一个' + grid.instanceLabel + '进行修改!');
         } else {
-            grid.suspendEvents();
-            window.location.href = '/bumons/' + selected[0].data.id;
+            Ext.create('Vmoss.view.main.ModifyView', {
+                selInstance:selected[0],
+                instanceLabel:grid.instanceLabel,
+                modelField:(grid.featureList.modfiyFeature || grid.featureList.benchFeature)
+            }).viewVersion().show();
         }
     },
 
