@@ -7,15 +7,25 @@ class ExtMapping
       @unit_pool = options[:mapping].inject([]) { |mapping, unit|
         unit[1] = {:ref => unit[1]} if unit[1].is_a?(String)
         mapping << MappingUnit.new(
-            {:name => unit[0].to_s}.merge(unit[1])
+            {
+                :name => unit[0].to_s,
+                :controller => @controller
+
+            }.merge(unit[1])
         )
       }
     else
 #未指定mapping配置时使用major_class构造mapping
-      @unit_pool = options[:controller].major.columns.inject([]) { |mapping, column|
+      major = (options[:major] || options[:controller].major)
+      @unit_pool = major.columns.inject([]) { |mapping, column|
 #默认不映射 created_at, updated_at
         unless ['created_at', 'updated_at'].include?(column.name)
-          mapping << MappingUnit.new(:name => column.name)
+          mapping << MappingUnit.new(
+              {
+                  :name => column.name,
+                  :controller => @controller
+              }
+          )
         end
         mapping
       }

@@ -26,7 +26,12 @@ class MappingUnit
     @read_only = options[:read_only]
 
     if options[:association]
-      @association_mapping
+      @association_mapping = ExtMapping.new(
+          :mapping => options[:mapping],
+          :controller => options[:controller],
+          :major => options[:controller].major.reflect_on_association(options[:association])
+      )
+      @association_mapping.mapping_override(options[:mapping_override]) if options[:mapping_override]
     else
       motion_init(options)
       condition_init(options)

@@ -4,7 +4,7 @@ class BasyosController < ApplicationController
   #before_filter :set_for_copy_basyo, :only => [:new]
   #before_filter :get_combox_store, :only => [:index, :new, :edit, :show]
 
-  mapping_override(
+  self.mapping_override(
       {
           :basyo_cd => {
               :seek_by => :similar
