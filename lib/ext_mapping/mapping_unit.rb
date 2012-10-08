@@ -4,15 +4,15 @@ class MappingUnit
   MOTION = [
 # 远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名
       :set,
-# 本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
+      # 本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
       :get
   ]
 
   TYPE = [
-      :persist,        # 持续型:参与所有的行为
-      :expand,         # 展开型:仅参与与bench相关映射
-      :logic,          # 逻辑型:不参与set/get
-      :ignore          # 忽略型:不参与所有的映射
+      :persist, # 持续型:参与所有的行为
+      :expand, # 展开型:仅参与与bench相关映射
+      :logic, # 逻辑型:不参与set/get
+      :ignore # 忽略型:不参与所有的映射
   ]
 
 # require option :name
@@ -26,10 +26,11 @@ class MappingUnit
     @read_only = options[:read_only]
 
     if options[:association]
+      @association = options[:association]
       @association_mapping = ExtMapping.new(
           :mapping => options[:mapping],
           :controller => options[:controller],
-          :major => options[:controller].major.reflect_on_association(options[:association])
+          :major => options[:controller].major.reflect_on_association(options[:association]).class_name.constantize
       )
       @association_mapping.mapping_override(options[:mapping_override]) if options[:mapping_override]
     else
@@ -39,7 +40,7 @@ class MappingUnit
   end
 
   def override(options)
-    [:ref, :type, :read_only].each{|attr|
+    [:ref, :type, :read_only].each { |attr|
       self.send((attr.to_s + '=').to_sym, options[attr]) if options[attr]
     }
     motion_init(options)
@@ -116,11 +117,20 @@ class MappingUnit
   def struct_value(target, options = {})
     value = nil
 
-    case @get_scope
-      when :model
-        value = options[:model].value_with_string(@get)
-      when :controller
-        value = options[:controller].send(@get.to_sym, options[:model])
+    if @association
+      association = options[:model].send(@association.to_sym)
+      if association
+        value = association.is_a?(Array) ? association.inject([]) { |result, association_unit|
+          result << @association_mapping.default_struct(association_unit, :scope => options[:controller])
+        } : [@association_mapping.default_struct(association, :scope => options[:controller])]
+      end
+    else
+      case @get_scope
+        when :model
+          value = options[:model].value_with_string(@get)
+        when :controller
+          value = options[:controller].send(@get.to_sym, options[:model])
+      end
     end
 
     target[@ref.to_sym] = value if value

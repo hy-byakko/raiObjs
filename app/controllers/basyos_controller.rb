@@ -32,10 +32,10 @@ class BasyosController < ApplicationController
               :conditions => 'in_rireki'
           },
           :turikin => {
-              :type => :ignore
+              :type => :expand
           },
           :vmanzenzaikosu => {
-              :type => :ignore
+              :type => :expand
           },
           :vmcolumns => {
               :association => :vmcolumns,

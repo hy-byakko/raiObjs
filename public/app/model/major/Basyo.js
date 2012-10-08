@@ -1,20 +1,23 @@
 Ext.define('Vmoss.model.major.Basyo', {
     extend:'Vmoss.lib.CModel',
+    requires: ['Vmoss.model.major.Vmcolumn'],
+
+    hasMany:{model:'Vmoss.model.major.Vmcolumn', name:'vmcolumns'},
 
     fields:[
         'id',
         'basyoCd',
         'basyoName',
         'customerId',
-        {name:'customerName',persist: false},
+        {name:'customerName', persist:false},
         'vmId',
-        {name:'vmCd', persist: false},
+        {name:'vmCd', persist:false},
         'bumonId',
-        {name:'bumonName', persist: false},
+        {name:'bumonName', persist:false},
         'eigyotantoId',
-        {name:'eigyotantoName', persist: false},
+        {name:'eigyotantoName', persist:false},
         'sagyotantoId',
-        {name:'sagyotantoName', persist: false},
+        {name:'sagyotantoName', persist:false},
         'rirekiKaisiDtm',
         'rirekiSyuryoDtm'
     ],

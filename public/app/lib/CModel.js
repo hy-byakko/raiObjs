@@ -224,5 +224,15 @@ Ext.define('Vmoss.lib.CModel', {
         }
 
         return result;
+    },
+
+    reload:function(){
+        var me = this;
+
+        Ext.ModelManager.getModel(me.modelName).load(me.getId(), {
+            success:function (temp) {
+                console.log(temp);
+            }}
+        );
     }
 });

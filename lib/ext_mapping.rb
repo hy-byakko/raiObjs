@@ -36,6 +36,9 @@ class ExtMapping
     new_mapping.each{|name, options|
       unit = get_unit(name)
       options = {:ref => options} if options.is_a?(String)
+      options.merge!({
+        :controller => @controller
+      })
       unit ? unit.override(options) : @unit_pool << MappingUnit.new(
           {:name => name.to_s}.merge(options)
       )

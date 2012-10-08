@@ -36,10 +36,7 @@ Ext.define('Vmoss.view.main.ModifyView', {
                 }
             });
 
-        var a = Ext.ModelManager.getModel(me.selInstance.modelName).load(me.selInstance.getId(), {
-            success:function (bumon) {
-                console.log(bumon);
-            }});
+        me.selInstance.reload();
 
         Ext.apply(me, {
             title:'修改' + me.instanceLabel,

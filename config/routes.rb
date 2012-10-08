@@ -16,6 +16,12 @@ HomeWork::Application.routes.draw do
   resources :bumons
   resources :basyos
 
+  match 'objects/:domain_class' => 'objects_service/restful_objects#index', :via => [:get]
+  match 'objects/:domain_class/:id' => 'objects_service/restful_objects#show', :via => [:get]
+  match 'objects/:domain_class' => 'objects_service/restful_objects#create', :via => [:post]
+  match 'objects/:domain_class/:id' => 'objects_service/restful_objects#update', :via => [:put]
+  match 'objects/:domain_class/:id' => 'objects_service/restful_objects#destroy', :via => [:destroy]
+
   # Sample resource route with options:
   #   resources :products do
   #     member do
@@ -58,4 +64,6 @@ HomeWork::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   match ':controller(/:action(/:id))(.:format)'
+
+
 end

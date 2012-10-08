@@ -36,7 +36,12 @@ Ext.define('Vmoss.view.main.major.Basyo', {
             xtype:'datefield',
             label:'作业日',
             format:'Y/m/d',
-            value:Ext.Date.format(new Date(), 'Y/m/d')
+            value:Ext.Date.format(new Date(), 'Y/m/d'),
+            listeners:{
+                change:function(){
+                    console.log(arguments);
+                }
+            }
         }
     ],
 

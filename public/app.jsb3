@@ -25,6 +25,16 @@
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
                 },
                 {
+                    "clsName": "Ext.util.Inflector",
+                    "name": "Inflector.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/util/"
+                },
+                {
+                    "clsName": "Ext.AbstractPlugin",
+                    "name": "AbstractPlugin.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/"
+                },
+                {
                     "clsName": "Ext.data.Operation",
                     "name": "Operation.js",
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/"
@@ -1253,6 +1263,61 @@
                     "clsName": "Ext.container.Viewport",
                     "name": "Viewport.js",
                     "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/container/"
+                },
+                {
+                    "clsName": "Ext.grid.plugin.HeaderResizer",
+                    "name": "HeaderResizer.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/plugin/"
+                },
+                {
+                    "clsName": "Ext.view.TableLayout",
+                    "name": "TableLayout.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/view/"
+                },
+                {
+                    "clsName": "Ext.selection.CellModel",
+                    "name": "CellModel.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/selection/"
+                },
+                {
+                    "clsName": "Ext.grid.plugin.HeaderReorderer",
+                    "name": "HeaderReorderer.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/plugin/"
+                },
+                {
+                    "clsName": "Ext.grid.header.Container",
+                    "name": "Container.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/header/"
+                },
+                {
+                    "clsName": "Ext.grid.column.Column",
+                    "name": "Column.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/grid/column/"
+                },
+                {
+                    "clsName": "Ext.tree.Column",
+                    "name": "Column.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/tree/"
+                },
+                {
+                    "clsName": "Ext.data.association.HasMany",
+                    "name": "HasMany.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/data/association/"
+                },
+                {
+                    "clsName": "Ext.picker.Month",
+                    "name": "Month.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/picker/"
+                },
+                {
+                    "clsName": "Ext.picker.Date",
+                    "name": "Date.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/picker/"
+                },
+                {
+                    "clsName": "Ext.form.field.Date",
+                    "name": "Date.js",
+                    "path": "../../../Mine%20Workspace/NewProject/public/extjs/src/form/field/"
                 }
             ]
         },

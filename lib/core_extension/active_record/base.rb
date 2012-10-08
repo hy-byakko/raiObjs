@@ -75,31 +75,34 @@ module CoreExtension
 
       def self.included(active_record)
 #
-# '±%{self.bumon}%{time-md}G%{serial-15}'
-# value = 'G0101FA144'
-# value = 'G(?<time_md>[0-9]{4}\)(?<serial_f_5>[0-9A-F]{5})'
-# reg = Regexp.new(value)
-# match_data = reg.match value
-# match_data.names.each{|rule_unit|
-#   rule_unit = "{\k<#{rule_unit}>}"
-#   value.gsub!(reg, rule_unit.to_sym => '1')
-# }
+# 在定义Model时调用此函数将会使第一个参数所对应的属性在被创建时自动赋值, 类似于主键的自动生成. 区别仅在于此函数生成的序列号
+# (sequence)带有一定的规则(regulation).
+# 序列号的表现形式是一个带有序号(sequence_count)的字符串.例:
+#   规则形如:         %{time-%m%d}%{self.bumon_cd}G%{sequence-5}%{A}
+#   则生成的序列号为:    1021        0010          G  00152        A
+# 其原理依赖于数据库中额外的一张序列表(sequences), 该表记录了满足特定情况的序号, 主键为种类(kind)和组合值(combo_value).
+# 种类与组合值默认值为"±". 仅在键相同时, 不同的序列号才会采用同一条的序列表记录.
 #
+# 参数:
+# attribute为将会被赋值的属性名(Symbol)
+# options中参数:kind, 用来指定该序列号的种类(String)
+#          参数:regulation, 用来指定该序列号的规则(String), 形如上文所述%{...}为动态填充内容, 其中"time", "sequence"
+#          为保留字段, "time"后跟随的为时间格式, "sequence"后为序号所占位数. 形如"self.attr"则会获取实例指向的值. 除保留
+#          字段, 其他动态填充的值将会被认为是组合值的一部分. 上例生成的组合值为"bumon_cd0010±A".
+#
+# 其他使用方式:
+# 最优先应用指定:method的情况, 需要的参数为:combo_value(Array), 每项为String或"self.attr"
 # code_generate :denpyo_no, :combo_value => ['self.bumon_id']
 # def denpyo_no_rule(v)
 #   'NO' + v.to_s + 'GPRS'
 # end
-#
-# code_rule = "%{time-%m%d}%{self.bumon_id}G%{sequence-15}%{G}"
-# 必要参数为:kind
-# 最优先应用指定:method的情况, 需要的参数为:combo_value(Array), 每项为String或'self.attr'获取实例指向的值
-# 其次适用:regulation(:rule)原则, 以规则内容生成combo_value, ['time', 'sequence']为保留字段
+# 其次适用:regulation(:rule)原则.
 # 最后当不指定:method和:rule的情况, 寻找attribute_rule方法, 需要参数:combo_value
 #
         def active_record.code_generate(attribute, options = {})
           stuff_method_name = ('auto_' + attribute.to_s + '_generate').to_sym
           sequence_conditions = {
-              :kind => options[:kind]
+              :kind => (options[:kind] || '±')
           }
           type = :method
           if options[:method]
