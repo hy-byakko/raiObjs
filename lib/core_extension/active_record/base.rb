@@ -1,7 +1,12 @@
 # encoding: utf-8
+require "record_mapping"
 module CoreExtension
   module ActiveRecord
     module Base
+# 得到Mapping结果
+      def mapping_exec(options = {})
+        self.class.mapping.struct(self, options)
+      end
 
       def mapping_attr(options = {})
         options[:scope].class.mapping.mapping_attr(
@@ -228,6 +233,43 @@ module CoreExtension
           }
         end
 
+#
+# self.mapping = {
+#     :id => 'id',
+#     :bumon_cd => 'bumonCd',
+#     :bumon_mei => 'bumonMei',
+#     :bumonlevel_id => 'bumonlevelId',
+#     :yubin_no => 'yubinNo',
+#     :tel_no => 'telNo',
+#     :fax_no => 'faxNo',
+#     :jusyo => 'jusyo'
+# }
+        def active_record.mapping=(mapping)
+          @record_mapping = RecordMapping.new(
+              :mapping => mapping,
+              :container => self
+          )
+        end
+
+        def active_record.mapping
+          @record_mapping ||= RecordMapping.new(
+              :container => self
+          )
+        end
+
+        def active_record.mapping_override(new_mapping)
+          mapping.mapping_override(new_mapping)
+        end
+
+# 添加查询条件, 查询并返回最终Mapping完之后的结果集
+        def active_record.query(params)
+          condition = mapping.add_condition({
+              :params => params
+          })
+          mapping.struct_exec(condition, {
+              :params => params
+          })
+        end
       end
     end
   end

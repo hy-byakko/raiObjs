@@ -1,9 +1,30 @@
-class ObjectsService::RestfulObjectsController < ApplicationController
-  def index
-    render :text => 'I am here'
-  end
+module ObjectsService
+  class RestfulObjectsController < ApplicationController
+    def restful_class
+      @restful_class ||= params[:restful_class].classify.constantize
+    end
 
-  def show
-    render :text => 'I am here' + params[:id].to_s
+    def index
+      render extjs_struct(restful_class.query(params))
+    end
+
+    def show
+      render extjs_struct(restful_class.find(params[:id]).mapping_exec(:motion => [:expand, :get]))
+    end
+
+    def create
+      restful_class.new.mapping_attr(params).save!
+      render extjs_struct
+    end
+
+    def update
+      restful_class.find(params[:id]).mapping_attr(params).save!
+      render extjs_struct
+    end
+
+    def destroy
+      restful_class.find(params[:id]).destroy
+      render extjs_struct
+    end
   end
 end

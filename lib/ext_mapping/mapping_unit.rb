@@ -4,15 +4,15 @@ class MappingUnit
   MOTION = [
 # 远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名
       :set,
-      # 本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
+# 本地模型数据映射为远程模型的数据时取值的方法/get_method为本地数据映射到远程时, 调用本地controller相应的方法名
       :get
   ]
 
   TYPE = [
       :persist, # 持续型:参与所有的行为
-      :expand, # 展开型:仅参与与bench相关映射
-      :logic, # 逻辑型:不参与set/get
-      :ignore # 忽略型:不参与所有的映射
+      :expand,  # 展开型:仅参与与bench相关映射
+      :logic,   # 逻辑型:不参与set/get
+      :ignore   # 忽略型:不参与所有的映射
   ]
 
 # require option :name

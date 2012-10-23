@@ -40,7 +40,20 @@ module CoreExtension
       end
 
       def search
-        struct_exec(search_condition)
+        self.class.mapping.struct_exec(search_condition, {
+            :params => params
+        })
+      end
+
+# 为Relation提供映射内的查询条件
+      def search_condition(condition = nil)
+        condition_struct = (condition || self.class.major)
+        self.class.mapping.add_condition(
+            {
+                :condition_struct => condition_struct,
+                :params => params
+            }
+        )
       end
 
 # 为Relation提供query内容的查询条件
@@ -56,47 +69,6 @@ module CoreExtension
         condition_struct
       end
 
-# 为Relation提供映射内的查询条件
-      def search_condition(condition = nil)
-        condition_struct = (condition || self.class.major)
-        self.class.mapping.add_condition(condition_struct, :scope => self)
-      end
-
-# Relation的查询并组装成extjs格式, 组装方式由传入的代码块/Proc/默认映射处理来决定.
-      def struct_exec(condition = nil, options = {})
-        condition_struct = (condition || self.class.major)
-        total_length = condition_struct.count
-        total_length = total_length.size if total_length.is_a?(Hash)
-
-        condition_struct = condition_struct.limit(params['limit'].to_i) if params['limit']
-        condition_struct = condition_struct.offset(params['start'].to_i) if params['start']
-#Todo: 涉及复杂情况下排序的设计 暂时不启用
-#"sort"=>"[{\"property\":\"bumonCd\",\"direction\":\"ASC\"}
-#if params['sort']
-#  JSON.parser(params['sort']).each{|sort_unit|
-#
-#  }
-#end
-
-        instances = condition_struct.all
-
-        data_source = instances.inject([]) { |source, instance|
-          if block_given?
-            source << (yield instance)
-          elsif options[:handle]
-            source << (options[:handle].call(instance))
-          else
-            source << self.class.mapping.default_struct(instance, :scope => self)
-          end
-          source
-        }
-
-        {
-            :total_length => total_length,
-            :source => data_source
-        }
-      end
-
       def extjs_struct(source = nil)
         ext_respond = {
             :json => {
@@ -104,20 +76,16 @@ module CoreExtension
             }
         }
         case source
-          when ActiveRecord::Base
-            ext_respond[:json].merge!(
-                {
-                    :root => [
-                        self.class.mapping.default_struct(source, :scope => self)
-                    ]
-                }
-            )
           when Hash
             ext_respond[:json].merge!(
-                {
-                    :totalLength => source[:total_length],
-                    :root => source[:source]
-                }
+                source[:total_length] ?
+                    {
+                        :totalLength => source[:total_length],
+                        :root => source[:source]
+                    } : {
+                    :root => [
+                        source
+                    ]}
             )
           when NilClass
           else
@@ -341,15 +309,15 @@ module CoreExtension
 #     :jusyo => 'jusyo'
 # }
         def active_controller.mapping=(mapping)
-          @mapping = ExtMapping.new(
+          @mapping = RecordMapping.new(
               :mapping => mapping,
-              :controller => self
+              :container => self
           )
         end
 
         def active_controller.mapping
-          @mapping ||= ExtMapping.new(
-              :controller => self
+          @mapping ||= RecordMapping.new(
+              :container => self
           )
         end
 
