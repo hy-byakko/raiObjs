@@ -5,14 +5,14 @@ module CoreExtension
     module Base
 # 得到Mapping结果
       def mapping_exec(options = {})
-        self.class.mapping.struct(self, options)
+        (options[:mapping] || self.class.mapping).struct(self, options)
       end
 
       def mapping_attr(options = {})
-        options[:scope].class.mapping.mapping_attr(
+        (options[:mapping] || self.class.mapping).mapping_attr(
             :model => self,
             :scope => options[:scope]
-        ) if options[:scope]
+        )
         self
       end
 

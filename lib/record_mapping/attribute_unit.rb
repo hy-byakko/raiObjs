@@ -61,7 +61,7 @@ class AttributeUnit
       end
     }
 # expand专属额外属性
-    motion_build(:expand, true) if options[:type] == :expand
+    motion_build(:lazy, true) if options[:type] == :expand
   end
 
   def motion_build(key, motion_value)
@@ -164,7 +164,7 @@ class AttributeUnit
 
   def available(options = {})
     options[:motion].all?{|motion_unit|
-      @motion.has_key?(motion_unit)
+      !(@motion[:lazy] && !options[:greedy]) && @motion.has_key?(motion_unit)
     }
   end
 

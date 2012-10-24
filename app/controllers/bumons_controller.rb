@@ -26,29 +26,34 @@ class BumonsController < ApplicationController
   self.mapping_override(
       {
           :bumon_cd => {
-              :seek_by => :similar
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
           },
           :bumon_mei => {
-              :seek_by => :similar
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
           },
           :customer_name => {
+              :type => :persist,
               :read_only => true,
               :get => 'syozokubumonlist'
           },
           :parent => {
+              :type => :persist,
               :read_only => true,
               :get => 'syozokubumonlist'
           },
           :kind => {
+              :type => :persist,
               :read_only => true,
               :get => 'kind.kind_name'
           }
       }
   )
-
-  def ignore_me(instance)
-
-  end
 
   def cyokuzoku_bumon(bumon)
     cyokuzoku = bumon.bumonsyozokus.select { |bumonsyozoku|

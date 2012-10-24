@@ -110,7 +110,7 @@ class RecordMapping
       elsif options[:handle]
         source << (options[:handle].call(instance))
       else
-        source << instance.mapping_exec
+        source << instance.mapping_exec(:mapping => self)
       end
       source
     }
@@ -141,10 +141,10 @@ class RecordMapping
   end
 
   def mapping_attr(options = {})
-    available_units(options.merge({:motion => [:set]})).each{|unit|
+    options[:motion] ? options[:motion] | [:set] : options[:motion] = [:set]
+    available_units(options).each{|unit|
       unit.mapping_to_model(
-          :model => options[:model],
-          :controller => options[:scope]
+          :instance => options[:model]
       )
     }
   end

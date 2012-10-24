@@ -9,7 +9,7 @@ module ObjectsService
     end
 
     def show
-      render extjs_struct(restful_class.find(params[:id]).mapping_exec(:motion => [:expand, :get]))
+      render extjs_struct(restful_class.find(params[:id]).mapping_exec(:motion => [:get], :greedy => true))
     end
 
     def create

@@ -17,12 +17,17 @@ module CoreExtension
       end
 
       def show
-        render extjs_struct(self.class.major.find(params[:id]))
+        render extjs_struct(self.class.major.find(params[:id]).mapping_exec(
+        {
+            :motion => [:get],
+            :greedy => true,
+            :mapping => self.class.mapping
+        }))
       end
 
       def create
         self.class.major.new.mapping_attr(
-            :scope => self
+            :mapping => self.class.mapping
         ).save!
         render extjs_struct
       end
