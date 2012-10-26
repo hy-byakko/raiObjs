@@ -7,15 +7,16 @@ class AttributeUnit
 # 远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名
       :set,
 #
-      :query
+      :query,
 
-#      :sort
+      :sort
   ]
 
 # 当:type在option中被指定时, 将依照:type来定义动作(motion), 未定义的动作将会被默认行为指定,
 # 仅当:type未被指定时, 未指定的动作不会指定默认行为
   TYPE = {
-      :persist => [:get, :set, :query], # 持续型:参与所有的行为
+      :persist => [:get, :set, :query, :sort], # 持续型:参与所有的行为
+      :grid => [:get, :sort],
       :logic => [:query],   # 逻辑型:不参与get/set
       :ignore => []  # 忽略型:不参与所有的映射
   }
@@ -68,9 +69,14 @@ class AttributeUnit
   def motion_build(key, motion_value)
     if key == :query
       motion_value = motion_value.is_a?(String) ? {
+          :field => motion_value,
           :seek_by => :equal
       } : motion_value
       @motion[:query] = query_build(motion_value)
+    elsif key == :sort
+      @motion[:sort] = motion_value.is_a?(String) ? {
+          :property => motion_value
+      } : motion_value
     else
       @motion[key] = motion_value
     end
@@ -81,29 +87,30 @@ class AttributeUnit
   def query_build(options)
     return options if options[:method]
     query_params = {}
-    motion_get = @motion[:get]
+    motion_field = (options[:field] || @motion[:get])
     case options[:seek_by]
       when :similar
-        query_params[:pre_cond] = "#{motion_get} LIKE :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} LIKE :#{motion_field}"
         query_params[:suf_cond] = "%:depend%"
       when :pre_similar
-        query_params[:pre_cond] = "#{motion_get} LIKE :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} LIKE :#{motion_field}"
         query_params[:suf_cond] = ":depend%"
       when :suf_similar
-        query_params[:pre_cond] = "#{motion_get} LIKE :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} LIKE :#{motion_field}"
         query_params[:suf_cond] = "%:depend"
       when :bigger
-        query_params[:pre_cond] = "#{motion_get} > :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} > :#{motion_field}"
       when :smaller
-        query_params[:pre_cond] = "#{motion_get} < :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} < :#{motion_field}"
       when :bigger_equal
-        query_params[:pre_cond] = "#{motion_get} >= :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} >= :#{motion_field}"
       when :smaller_equal
-        query_params[:pre_cond] = "#{motion_get} <= :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} <= :#{motion_field}"
       when :not_equal
-        query_params[:pre_cond] = "#{motion_get} <> :#{motion_get}"
+        query_params[:pre_cond] = "#{motion_field} <> :#{motion_field}"
     end
     {
+        :field => motion_field,
         :query_params => query_params
     }
   end
@@ -140,19 +147,32 @@ class AttributeUnit
     options[:instance].send((@motion[:set].to_s + '=').to_sym, options[:params][@ref.to_sym]) if options[:params].has_key?(@ref.to_sym)
   end
 
+  def add_sort(condition, options)
+    sort_param = options[:sort_params].select { |sort_unit|
+      sort_unit[:property] == @ref
+    }[0]
+    return condition unless sort_param
+    if @motion[:sort][:method]
+      options[:container].send(@motion[:sort][:method].to_sym, options)
+    else
+      condition = condition.order(@motion[:sort][:property] + ' ' + sort_param[:direction])
+      @motion[:sort][:joins] ? condition.joins(@motion[:sort][:joins].to_sym) : condition
+    end
+  end
+
   def add_condition(condition, options = {})
 # 默认无数据回传的查询条件不起效
     return condition if options[:params][@ref.to_sym].blank?
     if @motion[:query][:method]
-      options[:container].send(@motion[:query][:method].to_sym, options[:params])
+      options[:container].send(@motion[:query][:method].to_sym, options)
     else
-      motion_get = @motion[:get]
+      motion_field = @motion[:query][:field]
       depend_on = {
-          motion_get.to_sym => options[:params][@ref.to_sym]
+          motion_field.to_sym => options[:params][@ref.to_sym]
       }
       pre_cond = @motion[:query][:query_params][:pre_cond]
       suf_cond = @motion[:query][:query_params][:suf_cond]
-      depend_on[motion_get.to_sym] = suf_cond.gsub(/:depend/, depend_on[motion_get.to_sym]) if suf_cond
+      depend_on[motion_field.to_sym] = suf_cond.gsub(/:depend/, depend_on[motion_field.to_sym]) if suf_cond
       pre_cond ? condition.where([pre_cond, depend_on]) : condition.where(depend_on)
     end
   end

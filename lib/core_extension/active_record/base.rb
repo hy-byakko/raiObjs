@@ -8,11 +8,8 @@ module CoreExtension
         (options[:mapping] || self.class.mapping).struct(self, options)
       end
 
-      def mapping_attr(params, options = {})
-        (options[:mapping] || self.class.mapping).mapping_attr(self, {
-            :params => params,
-            :options => options
-        })
+      def mapping_attr(options)
+        (options[:mapping] || self.class.mapping).mapping_attr(self, options)
         self
       end
 
@@ -262,13 +259,12 @@ module CoreExtension
         end
 
 # 添加查询条件, 查询并返回最终Mapping完之后的结果集
-        def active_record.query(params)
-          condition = mapping.add_condition({
-              :params => params
-          })
-          mapping.struct_exec(condition, {
-              :params => params
-          })
+        def active_record.query(options)
+          condition = mapping.add_condition(options)
+          condition = mapping.add_sort(options.merge({
+              :condition_struct => condition
+          }))
+          mapping.struct_exec(condition, options)
         end
       end
     end

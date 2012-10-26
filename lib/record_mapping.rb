@@ -14,8 +14,10 @@ require_dependency File.expand_path(File.join('..', 'record_mapping', 'attribute
 #           :set => "user_name",
 #           :ref => "user_name",
 #           :query => {
+#               :field => "username",
 #               :seek_by => :equal
-#           }
+#           },
+#           :sort => "user_name"
 #        }
 #   :department_name => {
 #     :ref => 'departmentName' #远程映射字段 或者使用 :change_style => true 转化为此格式
@@ -86,7 +88,7 @@ class RecordMapping
 
 # 为options内的:condition_struct添加查询条件(当此值未传递时以RecordClass为起始条件)
 # :params为controller的params
-  def add_condition(options = {})
+  def add_condition(options)
     condition_struct = (options[:condition_struct] || record_class)
     available_units({
         :motion => [:query]
@@ -99,21 +101,28 @@ class RecordMapping
     condition_struct
   end
 
-# 执行查询并返回最终Mapping完之后的结果集, 组装方式由传入的代码块/Proc/默认映射处理来决定.
+# 为查询结构添加排序条件 接受由适配器解析而来的 :sort_params 参数 结构为 [{:property => "user_cd", :direction => "ASC"}]
+  def add_sort(options)
+    condition_struct = (options[:condition_struct] || record_class)
+    return condition_struct unless options[:sort_params]
+    available_units({
+                        :motion => [:sort]
+                    }).each { |unit|
+      condition_struct = unit.add_sort(condition_struct, {
+          :sort_params => options[:sort_params],
+          :container => @container
+      })
+    }
+    condition_struct
+  end
+
+# 执行查询并返回最终Mapping完之后的结果集, 组装方式由映射决定.
   def struct_exec(condition_struct, options = {})
     total_length = condition_struct.count
     total_length = total_length.size if total_length.is_a?(Hash)
 
     condition_struct = condition_struct.limit(options[:params][:limit].to_i) if options[:params][:limit]
     condition_struct = condition_struct.offset(options[:params][:start].to_i) if options[:params][:start]
-
-#Todo: 涉及复杂情况下排序的设计 暂时不启用
-#"sort"=>"[{\"property\":\"bumonCd\",\"direction\":\"ASC\"}
-#if params['sort']
-#  JSON.parser(params['sort']).each{|sort_unit|
-#
-#  }
-#end
 
     instances = condition_struct.all
 

@@ -5,7 +5,13 @@ module ObjectsService
     end
 
     def index
-      render extjs_struct(restful_class.query(params))
+      options = {
+          :params => params
+      }
+      if params[:sort]
+        options[:sort_params] = JSON.parse(params[:sort], :symbolize_names => true)
+      end
+      render extjs_struct(restful_class.query(options))
     end
 
     def show
@@ -13,12 +19,18 @@ module ObjectsService
     end
 
     def create
-      restful_class.new.mapping_attr(params, :greedy => true).save!
+      restful_class.new.mapping_attr({
+          :params => params,
+          :greedy => true
+      }).save!
       render extjs_struct
     end
 
     def update
-      restful_class.find(params[:id]).mapping_attr(params, :greedy => true).save!
+      restful_class.find(params[:id]).mapping_attr({
+          :params => params,
+          :greedy => true
+      }).save!
       render extjs_struct
     end
 

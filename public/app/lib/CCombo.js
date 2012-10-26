@@ -25,29 +25,35 @@ Ext.define('Vmoss.lib.CCombo', {
             options,
             instance = me.modelInstance;
 
+        if (me.association) {
+//此处分支为处理以关联构造的CCombo
 
-//为存在ref的CCombo创建初始store
-        if (me.ref) {
-            me.data = [
-                [
-                    instance.get(me.ref),
-                    instance.get(me.ori)
-                ]
-            ];
         }
+        else {
+//处理非关联型CCombo构造
+//为存在ref的CCombo创建初始临时store
+            if (me.ref) {
+                me.data = [
+                    [
+                        instance.get(me.ref),
+                        instance.get(me.ori)
+                    ]
+                ];
+            }
 
-        options = {
-            store:Ext.create('Vmoss.lib.CStore', {
-                fields:[
-                    {name:me.valueField, mapping:0},
-                    {name:me.displayField, mapping:1}
-                ],
-                pageSize:me.pageSize,
-                data:me.data,
-                dispatch:me.dispatch,
-                url:me.parent.bind.proxy.url
-            })
-        };
+            options = {
+                store:Ext.create('Vmoss.lib.CStore', {
+                    fields:[
+                        {name:me.valueField, mapping:0},
+                        {name:me.displayField, mapping:1}
+                    ],
+                    pageSize:me.pageSize,
+                    data:me.data,
+                    dispatch:me.dispatch,
+                    url:me.parent.bind.proxy.url
+                })
+            };
+        }
 
         Ext.apply(me, options);
 

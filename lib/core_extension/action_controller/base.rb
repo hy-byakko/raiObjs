@@ -26,7 +26,8 @@ module CoreExtension
       end
 
       def create
-        self.class.major.new.mapping_attr(params, {
+        self.class.major.new.mapping_attr({
+            :params => params,
             :greedy => true,
             :mapping => self.class.mapping
         }).save!
@@ -34,7 +35,8 @@ module CoreExtension
       end
 
       def update
-        self.class.major.find(params[:id]).mapping_attr(params, {
+        self.class.major.find(params[:id]).mapping_attr({
+            :params => params,
             :greedy => true,
             :mapping => self.class.mapping
         }).save!
@@ -55,10 +57,21 @@ module CoreExtension
 # 为Relation提供映射内的查询条件
       def search_condition(condition = nil)
         condition_struct = (condition || self.class.major)
-        self.class.mapping.add_condition(
+        condition_struct = self.class.mapping.add_condition(
             {
                 :condition_struct => condition_struct,
                 :params => params
+            }
+        )
+
+        if params[:sort]
+          sort_params = JSON.parse(params[:sort], :symbolize_names => true)
+        end
+        self.class.mapping.add_sort(
+            {
+                :condition_struct => condition_struct,
+                :params => params,
+                :sort_params => sort_params
             }
         )
       end
@@ -322,7 +335,7 @@ module CoreExtension
 # Static Method
       def self.included(active_controller)
         active_controller.before_filter :authorize
-        active_controller.around_filter :catch_exception
+        #active_controller.around_filter :catch_exception
 
         def active_controller.major=(major_class)
           @major_class = major_class
