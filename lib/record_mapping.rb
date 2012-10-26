@@ -4,8 +4,21 @@ require_dependency File.expand_path(File.join('..', 'record_mapping', 'attribute
 # MappingRule
 # {
 #   :user_name => :persist #当字段为Symbol时, 认为该字段为type类型, 默认Mapping皆为该种形式
+#   等同于
+#        :user_name => {
+#           :type => :persist
+#        }
+#   或者
+#        :user_name => {
+#           :get => "user_name",
+#           :set => "user_name",
+#           :ref => "user_name",
+#           :query => {
+#               :seek_by => :equal
+#           }
+#        }
 #   :department_name => {
-#     :ref => 'departmentName' #远程映射字段
+#     :ref => 'departmentName' #远程映射字段 或者使用 :change_style => true 转化为此格式
 #     :type => :persist
 #   }
 #   :email => {
@@ -87,7 +100,7 @@ class RecordMapping
   end
 
 # 执行查询并返回最终Mapping完之后的结果集, 组装方式由传入的代码块/Proc/默认映射处理来决定.
-  def struct_exec(condition_struct = nil, options = {})
+  def struct_exec(condition_struct, options = {})
     total_length = condition_struct.count
     total_length = total_length.size if total_length.is_a?(Hash)
 
@@ -105,13 +118,7 @@ class RecordMapping
     instances = condition_struct.all
 
     data_source = instances.inject([]) { |source, instance|
-      if block_given?
-        source << (yield instance)
-      elsif options[:handle]
-        source << (options[:handle].call(instance))
-      else
-        source << instance.mapping_exec(:mapping => self)
-      end
+      source << instance.mapping_exec(:mapping => self)
       source
     }
 
@@ -140,11 +147,12 @@ class RecordMapping
     }
   end
 
-  def mapping_attr(options = {})
+  def mapping_attr(instance, options = {})
     options[:motion] ? options[:motion] | [:set] : options[:motion] = [:set]
     available_units(options).each{|unit|
       unit.mapping_to_model(
-          :instance => options[:model]
+          :params => options[:params],
+          :instance => instance
       )
     }
   end

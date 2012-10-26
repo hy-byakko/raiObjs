@@ -8,11 +8,11 @@ module CoreExtension
         (options[:mapping] || self.class.mapping).struct(self, options)
       end
 
-      def mapping_attr(options = {})
-        (options[:mapping] || self.class.mapping).mapping_attr(
-            :model => self,
-            :scope => options[:scope]
-        )
+      def mapping_attr(params, options = {})
+        (options[:mapping] || self.class.mapping).mapping_attr(self, {
+            :params => params,
+            :options => options
+        })
         self
       end
 

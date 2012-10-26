@@ -3,15 +3,15 @@ Ext.define('Vmoss.model.major.Bumon', {
 
     fields:[
         'id',
-        'bumonCd',
-        'bumonMei',
-        'bumonlevelId',
+        'bumon_cd',
+        'bumon_mei',
+        'bumonlevel_id',
         {name:'kind', persist: false},
-        'parentId',
+        'parent_id',
         {name:'parent', persist: false},
-        'yubinNo',
-        'telNo',
-        'faxNo',
+        'yubin_no',
+        'tel_no',
+        'fax_no',
         'jusyo'
     ],
 
@@ -21,13 +21,13 @@ Ext.define('Vmoss.model.major.Bumon', {
     },
 
     fieldsExtend:[
-        {field:'bumonCd', label:'部门编号'},
-        {field:'bumonMei', label:'部门名称'},
-        {field:'kind', label:'部门类别', ref:'bumonlevelId'},
-        {field:'parent', label:'上级部门', ref:'parentId'},
-        {field:'yubinNo', label:'邮编'},
-        {field:'telNo', label:'电话'},
-        {field:'faxNo', label:'传真'},
+        {field:'bumon_cd', label:'部门编号'},
+        {field:'bumon_mei', label:'部门名称'},
+        {field:'kind', label:'部门类别', ref:'bumonlevel_id'},
+        {field:'parent', label:'上级部门', ref:'parent_id'},
+        {field:'yubin_no', label:'邮编'},
+        {field:'tel_no', label:'电话'},
+        {field:'fax_no', label:'传真'},
         {field:'jusyo', label:'地址'}
     ]
 });

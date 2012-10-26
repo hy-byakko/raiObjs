@@ -8,13 +8,14 @@ class AttributeUnit
       :set,
 #
       :query
+
+#      :sort
   ]
 
 # 当:type在option中被指定时, 将依照:type来定义动作(motion), 未定义的动作将会被默认行为指定,
 # 仅当:type未被指定时, 未指定的动作不会指定默认行为
   TYPE = {
       :persist => [:get, :set, :query], # 持续型:参与所有的行为
-      :expand => [:get, :set, :query],  # 展开型:仅参与与bench相关映射
       :logic => [:query],   # 逻辑型:不参与get/set
       :ignore => []  # 忽略型:不参与所有的映射
   }
@@ -23,9 +24,10 @@ class AttributeUnit
   def initialize(options = {})
     @name = options[:name]
     @motion = {}
+    @lazy = true if options[:lazy]
 
 # 远程模型的字段名, 取值/赋值时皆调用此字段
-    @ref = (options[:ref] || change_style(options[:name]))
+    @ref = (options[:ref] || (options[:change_style] ? change_style(options[:name]) : options[:name]))
 
     if options[:association]
       @association = options[:association]
@@ -44,6 +46,7 @@ class AttributeUnit
 
   def override(options)
     @ref = options[:ref] if options[:ref]
+    @lazy = options[:lazy] if options[:lazy]
     @motion = {} unless options[:type]
     motion_init(options)
   end
@@ -60,8 +63,6 @@ class AttributeUnit
         end
       end
     }
-# expand专属额外属性
-    motion_build(:lazy, true) if options[:type] == :expand
   end
 
   def motion_build(key, motion_value)
@@ -136,13 +137,7 @@ class AttributeUnit
   end
 
   def mapping_to_model(options = {})
-    source = options[:controller].params
-    case @set_scope
-      when :model
-        options[:model].send((@set.to_s + '=').to_sym, source[@ref.to_sym]) if source.has_key?(@ref.to_sym)
-      when :controller
-        options[:controller].send(@set.to_sym, options[:model])
-    end
+    options[:instance].send((@motion[:set].to_s + '=').to_sym, options[:params][@ref.to_sym]) if options[:params].has_key?(@ref.to_sym)
   end
 
   def add_condition(condition, options = {})
@@ -163,8 +158,9 @@ class AttributeUnit
   end
 
   def available(options = {})
+    return false if (@lazy && !options[:greedy])
     options[:motion].all?{|motion_unit|
-      !(@motion[:lazy] && !options[:greedy]) && @motion.has_key?(motion_unit)
+      @motion.has_key?(motion_unit)
     }
   end
 

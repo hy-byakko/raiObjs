@@ -26,16 +26,18 @@ module CoreExtension
       end
 
       def create
-        self.class.major.new.mapping_attr(
+        self.class.major.new.mapping_attr(params, {
+            :greedy => true,
             :mapping => self.class.mapping
-        ).save!
+        }).save!
         render extjs_struct
       end
 
       def update
-        self.class.major.find(params[:id]).mapping_attr(
-            :scope => self
-        ).save!
+        self.class.major.find(params[:id]).mapping_attr(params, {
+            :greedy => true,
+            :mapping => self.class.mapping
+        }).save!
         render extjs_struct
       end
 
@@ -97,6 +99,34 @@ module CoreExtension
             raise 'Unexpected source type.'
         end
         ext_respond
+      end
+
+# 与RecordMapping中同名函数返回相同结构的结果集, 但组装方式由传入的代码块/Proc来决定.
+      def struct_exec(condition_struct, options = {})
+        total_length = condition_struct.count
+        total_length = total_length.size if total_length.is_a?(Hash)
+
+        condition_struct = condition_struct.limit(params[:limit].to_i) if params[:limit]
+        condition_struct = condition_struct.offset(params[:start].to_i) if params[:start]
+
+        instances = condition_struct.all
+
+        if options[:handle]
+          data_source = instances.inject([]) { |source, instance|
+            source << (options[:handle].call(instance))
+            source
+          }
+        else
+          data_source = instances.inject([]) { |source, instance|
+            source << (yield instance)
+            source
+          }
+        end
+
+        {
+            :total_length => total_length,
+            :source => data_source
+        }
       end
 
 #

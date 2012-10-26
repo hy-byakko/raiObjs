@@ -232,6 +232,10 @@ Ext.define('Vmoss.lib.CModel', {
         Ext.ModelManager.getModel(me.modelName).load(me.getId(), {
             success:function (temp) {
                 console.log(temp);
+                temp.getDepartment(function(department, operation) {
+
+                    console.log(department);
+                })
             }}
         );
     }
