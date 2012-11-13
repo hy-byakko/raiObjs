@@ -231,12 +231,15 @@ Ext.define('Vmoss.lib.CModel', {
 
         Ext.ModelManager.getModel(me.modelName).load(me.getId(), {
             success:function (temp) {
+                temp['getVmoss.model.major.Department'].call(temp);
                 console.log(temp);
-                temp.getDepartment(function(department, operation) {
-
-                    console.log(department);
-                })
+                console.log(me);
+                me.data = temp.data;
+                me.rawData = temp.rawData;
+                console.log(me);
             }}
         );
+
+        //var associationInstance = instance[(associationUnit.getterName || 'get' + associationUnit.name)].call(instance);
     }
 });

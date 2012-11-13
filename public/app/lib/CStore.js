@@ -1,4 +1,5 @@
 /**
+ * CStore可创建未配置model的远程连接Store, 参数需提供url, dispatch(可选)
  * ExtendConfig:
  *  dispatch: String,
  *  url: String

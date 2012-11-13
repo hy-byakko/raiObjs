@@ -3,7 +3,7 @@ Ext.define('Vmoss.model.major.User', {
     extend:'Vmoss.lib.CModel',
 
     associations:[
-        { type:'belongsTo', model:'Vmoss.model.major.Department', foreignKey:'bumon_id', getterName:'getDepartment', setterName:'setDepartment'}
+        { type:'belongsTo', model:'Vmoss.model.major.Department', foreignKey:'bumon_id'}
     ],
 
     fields:[
@@ -29,6 +29,7 @@ Ext.define('Vmoss.model.major.User', {
     fieldsExtend:[
         {field:'user_cd', label:'用户编号'},
         {field:'user_name', label:'用户名'},
+        {field:'bumon_id', label:'部门名'},
         {field:'department_name', label:'部门名'},
         {field:'syokumu_id', label:'职位'},
         {field:'sex', label:'性别'},

@@ -26,12 +26,20 @@ Ext.define('Vmoss.lib.CCombo', {
             instance = me.modelInstance;
 
         if (me.association) {
-//此处分支为处理以关联构造的CCombo
-
+// 此处分支为处理以关联构造的CCombo
+            var associationUnit = me.parent.bind.associations.map[me.association];
+            options = {
+                displayField:me.display,
+                store:Ext.data.Store({
+                    model:associationUnit.model,
+                    pageSize:me.pageSize,
+                    data:[]
+                })
+            };
         }
         else {
-//处理非关联型CCombo构造
-//为存在ref的CCombo创建初始临时store
+// 处理非关联型CCombo构造
+// 为存在ref的CCombo创建初始临时store
             if (me.ref) {
                 me.data = [
                     [
