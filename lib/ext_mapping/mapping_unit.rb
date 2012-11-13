@@ -1,5 +1,5 @@
 # encoding: utf-8
-class MappingUnit
+class MappingUnitAbort
 # 默认映射动作, 对应的值为未指定时的默认值
   MOTION = [
 # 远程数据映射为对应模型上的字段时调用的方法/set_method为远程数据映射到本地时, 调用本地controller相应的方法名

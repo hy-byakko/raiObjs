@@ -1,4 +1,6 @@
 class Client < User
+  belongs_to :department, :foreign_key => 'bumon_id'
+
   self.mapping_override(
       {
           :user_cd => {
@@ -24,6 +26,10 @@ class Client < User
                   :property => 'bumons.bumon_mei',
                   :joins => 'bumon'
               }
+          },
+          :department => {
+              :association => :bumon,
+              :lazy => :true
           }
       }
   )

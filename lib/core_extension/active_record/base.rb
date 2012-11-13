@@ -242,14 +242,14 @@ module CoreExtension
 #     :jusyo => 'jusyo'
 # }
         def active_record.mapping=(mapping)
-          @record_mapping = RecordMapping.new(
+          @record_mapping = RecordMapping::Base.new(
               :mapping => mapping,
               :container => self
           )
         end
 
         def active_record.mapping
-          @record_mapping ||= RecordMapping.new(
+          @record_mapping ||= RecordMapping::Base.new(
               :container => self
           )
         end

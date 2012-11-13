@@ -1,13 +1,12 @@
 class Department < Bumon
-  self.mapping_override(
-      {
-
+  self.mapping = {
+          :id => :persist,
+          :bumon_mei => :persist,
           :query => {
               :query => {
                   :field => "bumon_mei",
                   :seek_by => :similar
               }
           }
-      }
-  )
+  }
 end

@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_dependency 'web_user'
-require_dependency 'ext_mapping'
 require_dependency 'customize_exception'
 module CoreExtension
   module ActionController
@@ -357,14 +356,14 @@ module CoreExtension
 #     :jusyo => 'jusyo'
 # }
         def active_controller.mapping=(mapping)
-          @mapping = RecordMapping.new(
+          @mapping = RecordMapping::Base.new(
               :mapping => mapping,
               :container => self
           )
         end
 
         def active_controller.mapping
-          @mapping ||= RecordMapping.new(
+          @mapping ||= RecordMapping::Base.new(
               :container => self
           )
         end
