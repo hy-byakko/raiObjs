@@ -286,7 +286,18 @@ Ext.define('Vmoss.lib.CModel', {
     },
 
     formSync:function () {
-        this.bindForms || [];
+        var me = this;
 
+        if (this.bindForms || this.bindForms.length !== 0) {
+            Ext.Array.each(this.bindForms, function(bindForm){
+                Ext.Array.each(bindForm.items.items, function(formItem){
+                    if(formItem.xtype === 'ccombo' && formItem.association){
+                        me['get' + formItem.association].call(me, {callback: function(association){
+                            formItem.setValue(association);
+                        }});
+                    }
+                });
+            });
+        }
     }
 });

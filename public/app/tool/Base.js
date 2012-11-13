@@ -11,6 +11,7 @@ Ext.define('Vmoss.Tool', {
 
     logEnable:false,
     requestLog: true,
+    _cacheMe: {},
 
     functionMerge:function () {
 // 将以参数形式传入的函数句柄转存为数组
@@ -132,7 +133,21 @@ Ext.define('Vmoss.Tool', {
 
         result[param] = token;
         return result;
-    }()
+    }(),
+
+// 提供一组方法缓存对象(方便供Chrome的Console内调用, 同ID对象会被覆盖)
+    cacheById: function(cache){
+        this._cacheMe[cache.id] = cache;
+        console.log(cache.id + ' Cached');
+    },
+
+    getCache: function(id){
+        return this._cacheMe[id];
+    },
+
+    cacheClean: function(){
+        this._cacheMe = {};
+    }
 });
 
 Ext.Ajax.on({

@@ -4,50 +4,66 @@ class BasyosController < ApplicationController
   #before_filter :set_for_copy_basyo, :only => [:new]
   #before_filter :get_combox_store, :only => [:index, :new, :edit, :show]
 
-  #self.mapping_override(
-  #    {
-  #        :basyo_cd => {
-  #            :seek_by => :similar
-  #        },
-  #        :basyo_name => {
-  #            :seek_by => :similar
-  #        },
-  #        :customer_name => {
-  #            :get => 'custom.customer_name'
-  #        },
-  #        :vm_cd => {
-  #            :get => 'vm.vm_cd'
-  #        },
-  #        :bumon_name => {
-  #            :get => 'bumon.bumon_mei'
-  #        },
-  #        :eigyotanto_name => {
-  #            :get => 'eigyotanto.user_name'
-  #        },
-  #        :sagyotanto_name => {
-  #            :get => 'sagyotanto.user_name'
-  #        },
-  #        :rireki_dtm => {
-  #            :type => :logic,
-  #            :conditions => 'in_rireki'
-  #        },
-  #        :turikin => {
-  #            :type => :expand
-  #        },
-  #        :vmanzenzaikosu => {
-  #            :type => :expand
-  #        },
-  #        :vmcolumns => {
-  #            :association => :vmcolumns,
-  #            :type => :expand,
-  #            :mapping_override => {
-  #                :group_no => {
-  #                    :type => :ignore
-  #                }
-  #            }
-  #        }
-  #    }
-  #)
+  self.mapping_override(
+      {
+          :basyo_cd => {
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
+          },
+          :basyo_name => {
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
+          },
+          :customer_name => {
+              :type => :grid,
+              :get => 'custom.customer_name',
+              :sort => {
+                  :property => 'customs.customer_name',
+                  :joins => 'custom'
+              }
+          },
+          :vm_cd => {
+              :type => :grid,
+              :get => 'vm.vm_cd',
+              :sort => {
+                  :property => 'vms.vm_cd',
+                  :joins => 'vm'
+              }
+          },
+          :bumon_name => {
+              :get => 'bumon.bumon_mei'
+          },
+          :eigyotanto_name => {
+              :get => 'eigyotanto.user_name'
+          },
+          :sagyotanto_name => {
+              :get => 'sagyotanto.user_name'
+          },
+          :rireki_dtm => {
+              :type => :logic,
+              :conditions => 'in_rireki'
+          },
+          :turikin => {
+              :type => :expand
+          },
+          :vmanzenzaikosu => {
+              :type => :expand
+          },
+          :vmcolumns => {
+              :association => :vmcolumns,
+              :type => :expand,
+              :mapping_override => {
+                  :group_no => {
+                      :type => :ignore
+                  }
+              }
+          }
+      }
+  )
 
   def in_rireki
     [

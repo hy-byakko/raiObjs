@@ -37,6 +37,7 @@ Ext.define('Vmoss.view.main.ModifyView', {
             });
 
         me.selInstance.singleLoad();
+        Vmoss.Tool.cacheById(me.selInstance);
 
         Ext.apply(me, {
             title:'修改' + me.instanceLabel,
