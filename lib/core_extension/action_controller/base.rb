@@ -247,9 +247,9 @@ module CoreExtension
             exception_unit.merge!(exception.info)
           when 'ActiveRecord::RecordInvalid'.constantize
             exception_unit[:exceptionType] = t('general.errors.title.record') # 保存记录出错
-            exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid')
-                                                                              # 字段映射
-            exception_unit[:errors] = self.class.mapping.ref_keys(exception.record.errors)
+            exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid') # 字段映射
+
+            exception_unit[:errors] = exception.record.invalid_struct(:mapping => self.class.mapping)
           else
             exception_unit[:exceptionType] = t('general.errors.title.uncatched') # 系统未捕获错误提示
         end
@@ -334,7 +334,7 @@ module CoreExtension
 # Static Method
       def self.included(active_controller)
         active_controller.before_filter :authorize
-        #active_controller.around_filter :catch_exception
+        active_controller.around_filter :catch_exception
 
         def active_controller.major=(major_class)
           @major_class = major_class

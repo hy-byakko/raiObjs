@@ -1,5 +1,8 @@
 module ObjectsService
   class RestfulObjectsController < ApplicationController
+# 默认所有controller都继承了restful服务提供方式, 但只有RestfulObject服务不同, 是目前唯一一个拥有无意义mapping的controller
+    self.mapping = :phantom
+
     def restful_class
       @restful_class ||= params[:restful_class].classify.constantize
     end

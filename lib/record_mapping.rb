@@ -35,7 +35,12 @@ require_dependency File.expand_path(File.join('..', 'record_mapping', 'associati
 #
 module RecordMapping
   class Base
-    def initialize(options = {})
+    def initialize(options)
+# 不具有实际意义的Mapping(目前仅用于RestfulObject)
+      if options[:mapping] == :phantom
+        @phantom = true
+        return
+      end
 # ActiveRecord宿主联接
       @container = options[:container]
       @unit_pool = []
@@ -178,6 +183,11 @@ module RecordMapping
       @unit_pool.select { |unit|
         unit.available(options)
       }
+    end
+
+# 判断Mapping是否存在实际意义
+    def is_phantom?
+      !!@phantom
     end
   end
 end

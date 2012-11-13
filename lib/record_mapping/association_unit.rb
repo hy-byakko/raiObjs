@@ -7,14 +7,18 @@ module RecordMapping
       super(options)
 
       @association = options[:association]
+
+      association_reflection = options[:record_class].reflect_on_association(options[:association])
+      @type = association_reflection.macro
+
       if options[:mapping]
         @association_mapping = RecordMapping::Base.new(
             :mapping => options[:mapping],
             :container => options[:container],
-            :record_class => options[:record_class].reflect_on_association(options[:association]).class_name.constantize
+            :record_class => association_reflection.class_name.constantize
         )
       else
-        @association_mapping = options[:record_class].reflect_on_association(options[:association]).class_name.constantize.mapping
+        @association_mapping = association_reflection.class_name.constantize.mapping
       end
 
       @association_mapping.mapping_override(options[:mapping_override]) if options[:mapping_override]
@@ -32,7 +36,7 @@ module RecordMapping
       if association
         value = association.is_a?(Array) ? association.inject([]) { |result, association_unit|
           result << association_unit.mapping_exec(:mapping => @association_mapping)
-        } : [association.mapping_exec(:mapping => @association_mapping)]
+        } : association.mapping_exec(:mapping => @association_mapping)
       end
 
       target[@ref.to_sym] = value if value
