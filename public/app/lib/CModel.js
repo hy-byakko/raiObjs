@@ -234,9 +234,21 @@ Ext.define('Vmoss.lib.CModel', {
                 temp['getVmoss.model.major.Department'].call(temp);
                 console.log(temp);
                 console.log(me);
-                me.data = temp.data;
-                me.rawData = temp.rawData;
-                console.log(me);
+                //me.data = temp.data;
+                //me.rawData = temp.rawData;
+                //console.log(me);
+                var testStore = temp['vmoss.model.major.roles']();
+                testStore.add({role_name:"A Name"});
+                testStore.add({role_name:"B Name"});
+                //testStore.sync();
+                me.proxy.getReader().convertRecordData(me.data, temp.raw, me);
+//                me.convertRecordData(convertedValues, node, record);
+//
+//                                records.push(record);
+//
+//                                if (me.implicitIncludes) {
+//                                    me.readAssociated(record, node);
+//                                }
             }}
         );
 

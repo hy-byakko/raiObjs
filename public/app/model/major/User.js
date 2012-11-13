@@ -1,9 +1,10 @@
 Ext.define('Vmoss.model.major.User', {
-    requires: ['Vmoss.model.major.Department'],
+    requires: ['Vmoss.model.major.Department', 'Vmoss.model.major.Role'],
     extend:'Vmoss.lib.CModel',
 
     associations:[
-        { type:'belongsTo', model:'Vmoss.model.major.Department', foreignKey:'bumon_id'}
+        { type:'belongsTo', model:'Vmoss.model.major.Department', foreignKey:'bumon_id'},
+        { type:'hasMany', model:'Vmoss.model.major.Role'}
     ],
 
     fields:[

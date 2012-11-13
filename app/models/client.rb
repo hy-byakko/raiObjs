@@ -28,8 +28,14 @@ class Client < User
               }
           },
           :department => {
-              :association => :bumon,
+              :association => :department,
+              :ref => 'vmoss.model.major.department',
               :lazy => :true
+          },
+          :roles => {
+              :association => :roles,
+              :ref => 'vmoss.model.major.roles',
+              :lazy => true
           }
       }
   )

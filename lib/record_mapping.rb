@@ -39,6 +39,7 @@ module RecordMapping
 # ActiveRecord宿主联接
       @container = options[:container]
       @unit_pool = []
+      @record_class = (options[:record_class] || (@container.superclass == ApplicationController) ? @container.major : @container)
       if options[:mapping]
         options[:mapping].inject(@unit_pool) { |mapping, unit|
           unit[1] = {:type => unit[1]} if unit[1].is_a?(Symbol)
@@ -46,14 +47,14 @@ module RecordMapping
               :name => unit[0].to_s
           }.merge(unit[1])
           if unit[1][:association]
-            mapping << AssociationUnit.new(unit_options)
+            mapping << AssociationUnit.new({:type => :accessor, :record_class => @record_class}.merge(unit_options))
           else
             mapping << AttributeUnit.new(unit_options)
           end
         }
       else
 # 未指定mapping配置时使用active_record构造mapping
-        @unit_pool = record_class.columns.inject([]) { |mapping, column|
+        @unit_pool = @record_class.columns.inject([]) { |mapping, column|
 # 默认不映射 created_at, updated_at
           unless ['created_at', 'updated_at'].include?(column.name)
             mapping << AttributeUnit.new(
@@ -68,11 +69,6 @@ module RecordMapping
       end
     end
 
-# 获得当前Mapping所映射的Record类
-    def record_class
-      (@container.superclass == ApplicationController) ? @container.major : @container
-    end
-
     def mapping_override(new_mapping)
       return unless new_mapping
       new_mapping.each { |name, options|
@@ -83,7 +79,7 @@ module RecordMapping
           unit.override(unit_options)
         else
           if unit_options[:association]
-            @unit_pool << AssociationUnit.new(unit_options)
+            @unit_pool << AssociationUnit.new({:type => :accessor, :record_class => @record_class}.merge(unit_options))
           else
             @unit_pool << AttributeUnit.new(unit_options)
           end
@@ -100,12 +96,13 @@ module RecordMapping
 # 为options内的:condition_struct添加查询条件(当此值未传递时以RecordClass为起始条件)
 # :params为controller的params
     def add_condition(options)
-      condition_struct = (options[:condition_struct] || record_class)
+      condition_struct = (options[:condition_struct] || @record_class)
       available_units({
                           :motion => [:query]
                       }).each { |unit|
         condition_struct = unit.add_condition(condition_struct, {
             :params => options[:params],
+            :filter_params => options[:filter_params],
             :container => @container
         })
       }
@@ -114,7 +111,7 @@ module RecordMapping
 
 # 为查询结构添加排序条件 接受由适配器解析而来的 :sort_params 参数 结构为 [{:property => "user_cd", :direction => "ASC"}]
     def add_sort(options)
-      condition_struct = (options[:condition_struct] || record_class)
+      condition_struct = (options[:condition_struct] || @record_class)
       return condition_struct unless options[:sort_params]
       available_units({
                           :motion => [:sort]

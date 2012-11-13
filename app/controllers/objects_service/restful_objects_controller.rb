@@ -8,9 +8,8 @@ module ObjectsService
       options = {
           :params => params
       }
-      if params[:sort]
-        options[:sort_params] = JSON.parse(params[:sort], :symbolize_names => true)
-      end
+      options[:sort_params] = JSON.parse(params[:sort], :symbolize_names => true) if params[:sort]
+      options[:filter_params] = JSON.parse(params[:filter], :symbolize_names => true) if params[:filter]
       render extjs_struct(restful_class.query(options))
     end
 
