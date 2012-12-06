@@ -334,7 +334,7 @@ module CoreExtension
 # Static Method
       def self.included(active_controller)
         active_controller.before_filter :authorize
-        #active_controller.around_filter :catch_exception
+        active_controller.around_filter :catch_exception
 
         def active_controller.major=(major_class)
           @major_class = major_class
