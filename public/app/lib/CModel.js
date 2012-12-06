@@ -97,10 +97,10 @@ Ext.define('Vmoss.lib.CModel', {
         this.callParent(arguments);
     },
 
-//添加form绑定
+// 添加form绑定
     bindForm:function (bindForm) {
         if (!this.bindForms) {
-//在与远程完成交互时通知所绑定的form
+// 在与远程完成交互时通知所绑定的form
             this.on("response", this.formBindHandle);
         }
 
@@ -108,14 +108,14 @@ Ext.define('Vmoss.lib.CModel', {
         this.bindForms.push(bindForm);
     },
 
-//取消form绑定
+// 取消form绑定
     unBindForm:function (bindForm) {
         Ext.Array.remove(this.bindForms, bindForm);
     },
 
-//绑定此模型的form的默认动作
+// 绑定此模型的form的默认动作
     formBindHandle:function (record, operation) {
-//仅当请求失败时, 将错误信息反馈给所有绑定自身的form
+// 仅当请求失败时, 将错误信息反馈给所有绑定自身的form
         if(!operation.success && operation.response){
             var responseObj = Ext.JSON.decode(operation.response.responseText);
             Ext.each(this.bindForms, function(bindForm){
@@ -124,7 +124,9 @@ Ext.define('Vmoss.lib.CModel', {
         }
     },
 
-//此方法为model实例内的某一属性与component的某一属性绑定的实现, 绑定为双向相互都能修改对方的值.
+
+
+// 此方法为model实例内的某一属性与component的某一属性绑定的实现, 绑定为双向相互都能修改对方的值.
     bindProperty:function (options) {
         options = options || {};
         if (options.component && options.component.isComponent) {
@@ -197,7 +199,7 @@ Ext.define('Vmoss.lib.CModel', {
         })
     },
 
-//This function for get a value from a instance with an attr or method.
+// This function for get a value from a instance with an attr or method.
     _getValue:function (item, method) {
         if (typeof(method) == 'function') {
             return method.call(item);
@@ -206,7 +208,7 @@ Ext.define('Vmoss.lib.CModel', {
         }
     },
 
-//This function for set a value from a instance with an attr or method.
+// This function for set a value from a instance with an attr or method.
     _setValue:function (item, method, newValue) {
         if (typeof(method) == 'function') {
             method.call(item, newValue);
@@ -217,26 +219,85 @@ Ext.define('Vmoss.lib.CModel', {
 
     modifyValue: function(){
         var me = this,
-            result = {};
+            result = {},
+            key;
 
-        for(var key in me.modified){
+        for(key in me.modified){
             result[key] = me.get(key);
         }
 
         return result;
     },
 
-    reload:function(){
-        var me = this;
+// 为当前实例发起show请求, 并将返回结果覆盖原有数据, 注意对关联(对于原关联存在并且调用此方法)而言, 此方法只保证第一层是相同对象, 多层对象将被替换
+    singleLoad:function(){
+        var me = this,
+            reader = me.proxy.getReader(),
+            associations = me.associations.items,
+            association,
+            i = 0,
+            length = associations.length,
+            associationCacheName,
+            associationCache,
+            associationData,
+            associationReader,
+            associationProxy;
 
         Ext.ModelManager.getModel(me.modelName).load(me.getId(), {
-            success:function (temp) {
-                console.log(temp);
-                temp.getDepartment(function(department, operation) {
+                success:function (singleModel) {
+                    me.raw = singleModel.raw;
+                    reader.convertRecordData(me.data, singleModel.raw, me);
 
-                    console.log(department);
-                })
-            }}
+                    for (; i < length; i++) {
+                        association     = associations[i];
+
+                        associationCacheName = (association.type === 'hasMany') ? association.storeName : association.instanceName;
+                        associationCache = singleModel[associationCacheName];
+
+                        if(associationCache) {
+                            if (me[associationCacheName]) {
+                                associationData = reader.getAssociatedDataRoot(singleModel.raw, association.associationKey || association.name);
+                                if (association.type === 'hasMany') {
+                                    me[associationCacheName].loadData(associationData);
+                                }
+                                else {
+                                    me[associationCacheName].raw = associationData;
+
+                                    associationReader = association.getReader();
+                                    if (!associationReader) {
+                                        associationProxy = association.associatedModel.proxy;
+                                        if (associationProxy) {
+                                            associationReader = associationProxy.getReader();
+                                        }
+                                    }
+                                    associationReader.convertRecordData(me[associationCacheName].data, associationData, me[associationCacheName]);
+                                    associationReader.readAssociated(me[associationCacheName], associationData);
+                                }
+                            }
+                            else {
+                                me[associationCacheName] = associationCache;
+                            }
+                        }
+                    }
+
+                    me.formSync();
+                }}
         );
+    },
+
+    formSync:function () {
+        var me = this;
+
+        if (this.bindForms || this.bindForms.length !== 0) {
+            Ext.Array.each(this.bindForms, function(bindForm){
+                Ext.Array.each(bindForm.items.items, function(formItem){
+                    if(formItem.xtype === 'ccombo' && formItem.association){
+                        me['get' + formItem.association].call(me, {callback: function(association){
+                            formItem.setValue(association);
+                        }});
+                    }
+                });
+            });
+        }
     }
 });

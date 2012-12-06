@@ -4,35 +4,35 @@ Ext.define('Vmoss.view.main.major.Basyo', {
     instanceLabel:'点位',
 
     searchFeature:[
-        {field:'basyoCd', vtype:'alphanum', xtype:'textfield', maxLength:4},
-        {field:'basyoName', xtype:'textfield', maxLength:30},
+        {field:'basyo_cd', vtype:'alphanum', xtype:'textfield', maxLength:4},
+        {field:'basyo_name', xtype:'textfield', maxLength:30},
         {
-            field:'customerId',
+            field:'customer_id',
             xtype:'ccombo',
             dispatch:'get_customer'
         },
         {
-            field:'vmId',
+            field:'vm_id',
             xtype:'ccombo',
             dispatch:'get_vm'
         },
         {
-            field:'bumonId',
+            field:'bumon_id',
             xtype:'ccombo',
             dispatch:'get_bumon'
         },
         {
-            field:'eigyotantoId',
+            field:'eigyotanto_id',
             xtype:'ccombo',
             dispatch:'get_eigyotanto'
         },
         {
-            field:'sagyotantoId',
+            field:'sagyotanto_id',
             xtype:'ccombo',
             dispatch:'get_sagyotanto'
         },
         {
-            field:'rirekiDtm',
+            field:'rireki_dtm',
             xtype:'datefield',
             label:'作业日',
             format:'Y/m/d',
@@ -46,42 +46,42 @@ Ext.define('Vmoss.view.main.major.Basyo', {
     ],
 
     gridFeature:[
-        'customerName',
-        'basyoCd',
-        'basyoName',
-        'rirekiKaisiDtm',
-        'rirekiSyuryoDtm',
-        {field:'bumonName', label:'管辖部门'},
-        'eigyotantoName',
-        'vmCd',
-        'sagyotantoName'
+        'customer_name',
+        'basyo_cd',
+        'basyo_name',
+        'rireki_kaisi_dtm',
+        'rireki_syuryo_dtm',
+        {field:'bumon_name', label:'管辖部门'},
+        'eigyotanto_name',
+        'vm_cd',
+        'sagyotanto_name'
     ],
 
     benchFeature:[
-        {field:'basyoCd', vtype:'alphanum', xtype:'textfield', maxLength:4},
-        {field:'basyoName', xtype:'textfield', maxLength:30},
+        {field:'basyo_cd', vtype:'alphanum', xtype:'textfield', maxLength:4},
+        {field:'basyo_name', xtype:'textfield', maxLength:30},
         {
-            field:'customerId',
+            field:'customer_id',
             xtype:'ccombo',
             dispatch:'get_customer'
         },
         {
-            field:'vmId',
+            field:'vm_id',
             xtype:'ccombo',
             dispatch:'get_vm'
         },
         {
-            field:'bumonId',
+            field:'bumon_id',
             xtype:'ccombo',
             dispatch:'get_bumon'
         },
         {
-            field:'eigyotantoId',
+            field:'eigyotanto_id',
             xtype:'ccombo',
             dispatch:'get_eigyotanto'
         },
         {
-            field:'sagyotantoId',
+            field:'sagyotanto_id',
             xtype:'ccombo',
             dispatch:'get_sagyotanto'
         }

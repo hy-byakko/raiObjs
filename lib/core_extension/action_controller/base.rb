@@ -1,6 +1,5 @@
 # encoding: utf-8
 require_dependency 'web_user'
-require_dependency 'ext_mapping'
 require_dependency 'customize_exception'
 module CoreExtension
   module ActionController
@@ -248,9 +247,9 @@ module CoreExtension
             exception_unit.merge!(exception.info)
           when 'ActiveRecord::RecordInvalid'.constantize
             exception_unit[:exceptionType] = t('general.errors.title.record') # 保存记录出错
-            exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid')
-                                                                              # 字段映射
-            exception_unit[:errors] = self.class.mapping.ref_keys(exception.record.errors)
+            exception_unit[:exceptionMessage] = t('general.errors.messages.record_invalid') # 字段映射
+
+            exception_unit[:errors] = exception.record.invalid_struct(:mapping => self.class.mapping)
           else
             exception_unit[:exceptionType] = t('general.errors.title.uncatched') # 系统未捕获错误提示
         end
@@ -357,14 +356,14 @@ module CoreExtension
 #     :jusyo => 'jusyo'
 # }
         def active_controller.mapping=(mapping)
-          @mapping = RecordMapping.new(
+          @mapping = RecordMapping::Base.new(
               :mapping => mapping,
               :container => self
           )
         end
 
         def active_controller.mapping
-          @mapping ||= RecordMapping.new(
+          @mapping ||= RecordMapping::Base.new(
               :container => self
           )
         end

@@ -5,12 +5,19 @@ module CoreExtension
     module Base
 # 得到Mapping结果
       def mapping_exec(options = {})
-        (options[:mapping] || self.class.mapping).struct(self, options)
+        mapping = (options[:mapping] && !options[:mapping].is_phantom?) ? options[:mapping] : self.class.mapping
+        mapping.struct(self, options)
       end
 
       def mapping_attr(options)
-        (options[:mapping] || self.class.mapping).mapping_attr(self, options)
+        mapping = (options[:mapping] && !options[:mapping].is_phantom?) ? options[:mapping] : self.class.mapping
+        mapping.mapping_attr(self, options)
         self
+      end
+
+      def invalid_struct(options)
+        mapping = (options[:mapping] && !options[:mapping].is_phantom?) ? options[:mapping] : self.class.mapping
+        mapping.ref_keys(self.errors)
       end
 
       def match_attr(source, options = {})
@@ -242,14 +249,14 @@ module CoreExtension
 #     :jusyo => 'jusyo'
 # }
         def active_record.mapping=(mapping)
-          @record_mapping = RecordMapping.new(
+          @record_mapping = RecordMapping::Base.new(
               :mapping => mapping,
               :container => self
           )
         end
 
         def active_record.mapping
-          @record_mapping ||= RecordMapping.new(
+          @record_mapping ||= RecordMapping::Base.new(
               :container => self
           )
         end

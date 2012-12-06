@@ -62,6 +62,7 @@ Ext.define('Vmoss.lib.CForm', {
         Ext.apply(me, options);
 
         me.on({
+// 值填充时机在此
             afterrender: function(){
                 me.loadRecord(me.bind);
             },

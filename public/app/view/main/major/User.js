@@ -7,8 +7,9 @@ Ext.define('Vmoss.view.main.major.User', {
         {field:'user_cd', vtype:'alphanum', xtype:'textfield', maxLength:4},
         {field:'user_name', xtype:'textfield', maxLength:30},
         {
-            field:'bumon_mei',
+            field:'bumon_id',
             association: 'Vmoss.model.major.Department',
+            display:'bumon_mei',
             xtype:'ccombo'
         }
     ],
@@ -26,7 +27,12 @@ Ext.define('Vmoss.view.main.major.User', {
     benchFeature:[
         {field: 'user_cd', allowBlank: false},
         {field: 'user_name', allowBlank: false},
-        'department_name',
+        {
+            field:'bumon_id',
+            association: 'Vmoss.model.major.Department',
+            display:'bumon_mei',
+            xtype:'ccombo'
+        },
         'birth_dtm',
         'nyusya_dtm',
         'tel_no',

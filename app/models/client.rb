@@ -1,4 +1,6 @@
 class Client < User
+  belongs_to :department, :foreign_key => 'bumon_id'
+
   self.mapping_override(
       {
           :user_cd => {
@@ -21,9 +23,19 @@ class Client < User
               :type => :grid,
               :get => 'bumon.bumon_mei',
               :sort => {
-                  :property => 'bumons.bumon_mei',
-                  :joins => 'bumon'
+                  :field => 'bumons.bumon_mei',
+                  :joins => :bumon
               }
+          },
+          :department => {
+              :association => :department,
+              :ref => 'vmoss.model.major.department',
+              :lazy => :true
+          },
+          :roles => {
+              :association => :roles,
+              :ref => 'vmoss.model.major.roles',
+              :lazy => true
           }
       }
   )

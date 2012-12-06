@@ -1,5 +1,8 @@
 module ObjectsService
   class RestfulObjectsController < ApplicationController
+# 默认所有controller都继承了restful服务提供方式, 但只有RestfulObject服务不同, 是目前唯一一个拥有无意义mapping的controller
+    self.mapping = :phantom
+
     def restful_class
       @restful_class ||= params[:restful_class].classify.constantize
     end
@@ -8,9 +11,8 @@ module ObjectsService
       options = {
           :params => params
       }
-      if params[:sort]
-        options[:sort_params] = JSON.parse(params[:sort], :symbolize_names => true)
-      end
+      options[:sort_params] = JSON.parse(params[:sort], :symbolize_names => true) if params[:sort]
+      options[:filter_params] = JSON.parse(params[:filter], :symbolize_names => true) if params[:filter]
       render extjs_struct(restful_class.query(options))
     end
 

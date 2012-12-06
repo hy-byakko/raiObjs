@@ -26,12 +26,21 @@ Ext.define('Vmoss.lib.CCombo', {
             instance = me.modelInstance;
 
         if (me.association) {
-//此处分支为处理以关联构造的CCombo
-
+// 此处分支为处理以关联构造的CCombo
+            var associationUnit = me.parent.bind.associations.map[me.association];
+            options = {
+                valueField:'id',
+                displayField:me.display,
+                store:Ext.data.Store({
+                    model:associationUnit.model,
+                    pageSize:me.pageSize,
+                    data:[]
+                })
+            };
         }
         else {
-//处理非关联型CCombo构造
-//为存在ref的CCombo创建初始临时store
+// 处理非关联型CCombo构造
+// 为存在ref的CCombo创建初始临时store
             if (me.ref) {
                 me.data = [
                     [
@@ -88,5 +97,17 @@ Ext.define('Vmoss.lib.CCombo', {
 //        }
 
         return Ext.merge(requestParams, params)
+    },
+
+// 仅当setValue对象为Model时, 允许存在一个不处于store之内的Model对象被缓存, 该Model对象为Combo的默认显示值
+    setValue:function (value) {
+        if (value && value.isModel) {
+            this.originalModelCache = value;
+        }
+        else if (this.originalModelCache && this.originalModelCache.get(this.valueField) === value) {
+            arguments[0] = this.originalModelCache;
+        }
+
+        this.callParent(arguments);
     }
 });

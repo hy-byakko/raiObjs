@@ -1,6 +1,6 @@
 require_dependency File.expand_path(File.join('..', 'ext_mapping', 'mapping_unit'), __FILE__)
-
-class ExtMapping
+puts "Should Not Loaded"
+class ExtMappingAbort
   def initialize(options = {})
     @controller = options[:controller]
     if options[:mapping]

@@ -6,20 +6,20 @@ Ext.define('Vmoss.model.major.Basyo', {
 
     fields:[
         'id',
-        'basyoCd',
-        'basyoName',
-        'customerId',
-        {name:'customerName', persist:false},
-        'vmId',
-        {name:'vmCd', persist:false},
-        'bumonId',
-        {name:'bumonName', persist:false},
-        'eigyotantoId',
-        {name:'eigyotantoName', persist:false},
-        'sagyotantoId',
-        {name:'sagyotantoName', persist:false},
-        'rirekiKaisiDtm',
-        'rirekiSyuryoDtm'
+        'basyo_cd',
+        'basyo_name',
+        'customer_id',
+        {name:'customer_name', persist:false},
+        'vm_id',
+        {name:'vm_cd', persist:false},
+        'bumon_id',
+        {name:'bumon_name', persist:false},
+        'eigyotanto_id',
+        {name:'eigyotanto_name', persist:false},
+        'sagyotanto_id',
+        {name:'sagyotanto_name', persist:false},
+        'rireki_kaisi_dtm',
+        'rireki_syuryo_dtm'
     ],
 
     proxy:{
@@ -28,14 +28,14 @@ Ext.define('Vmoss.model.major.Basyo', {
     },
 
     fieldsExtend:[
-        {field:'basyoCd', label:'点位编号'},
-        {field:'basyoName', label:'点位名称'},
-        {field:'customerName', label:'客户', ref:'customerId'},
-        {field:'vmCd', label:'自售机', ref:'vmId'},
-        {field:'bumonName', label:'部门', ref:'bumonId'},
-        {field:'eigyotantoName', label:'营业担当者', ref:'eigyotantoId'},
-        {field:'sagyotantoName', label:'巡回担当者', ref:'sagyotantoId'},
-        {field:'rirekiKaisiDtm', label:'履历开始时刻'},
-        {field:'rirekiSyuryoDtm', label:'履历终了时刻'}
+        {field:'basyo_cd', label:'点位编号'},
+        {field:'basyo_name', label:'点位名称'},
+        {field:'customer_name', label:'客户', ref:'customer_id'},
+        {field:'vm_cd', label:'自售机', ref:'vm_id'},
+        {field:'bumon_name', label:'部门', ref:'bumon_id'},
+        {field:'eigyotanto_name', label:'营业担当者', ref:'eigyotanto_id'},
+        {field:'sagyotanto_name', label:'巡回担当者', ref:'sagyotanto_id'},
+        {field:'rireki_kaisi_dtm', label:'履历开始时刻'},
+        {field:'rireki_syuryo_dtm', label:'履历终了时刻'}
     ]
 });

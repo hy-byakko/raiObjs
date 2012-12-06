@@ -4,58 +4,93 @@ class BasyosController < ApplicationController
   #before_filter :set_for_copy_basyo, :only => [:new]
   #before_filter :get_combox_store, :only => [:index, :new, :edit, :show]
 
-  #self.mapping_override(
-  #    {
-  #        :basyo_cd => {
-  #            :seek_by => :similar
-  #        },
-  #        :basyo_name => {
-  #            :seek_by => :similar
-  #        },
-  #        :customer_name => {
-  #            :get => 'custom.customer_name'
-  #        },
-  #        :vm_cd => {
-  #            :get => 'vm.vm_cd'
-  #        },
-  #        :bumon_name => {
-  #            :get => 'bumon.bumon_mei'
-  #        },
-  #        :eigyotanto_name => {
-  #            :get => 'eigyotanto.user_name'
-  #        },
-  #        :sagyotanto_name => {
-  #            :get => 'sagyotanto.user_name'
-  #        },
-  #        :rireki_dtm => {
-  #            :type => :logic,
-  #            :conditions => 'in_rireki'
-  #        },
-  #        :turikin => {
-  #            :type => :expand
-  #        },
-  #        :vmanzenzaikosu => {
-  #            :type => :expand
-  #        },
-  #        :vmcolumns => {
-  #            :association => :vmcolumns,
-  #            :type => :expand,
-  #            :mapping_override => {
-  #                :group_no => {
-  #                    :type => :ignore
-  #                }
-  #            }
-  #        }
-  #    }
-  #)
+  self.mapping_override(
+      {
+          :basyo_cd => {
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
+          },
+          :basyo_name => {
+              :type => :persist,
+              :query => {
+                  :seek_by => :similar
+              }
+          },
+          :customer_name => {
+              :type => :grid,
+              :get => 'custom.customer_name',
+              :sort => {
+                  :field => '`customs`.`customer_name`',
+                  :joins => :custom
+              }
+          },
+          :vm_cd => {
+              :type => :grid,
+              :get => 'vm.vm_cd',
+              :sort => {
+                  :field => '`vms`.`vm_cd`',
+                  :joins => :vm
+              }
+          },
+          :bumon_name => {
+              :type => :grid,
+              :get => 'bumon.bumon_mei',
+              :sort => {
+                  :field => '`bumons`.`bumon_mei`',
+                  :joins => :bumon
+              }
+          },
+          :eigyotanto_name => {
+              :type => :grid,
+              :get => 'eigyotanto.user_name',
+              :sort => {
+                  :field => '`eigyotanto`.`user_name`',
+                  :joins => '`users` `eigyotanto`'
+              }
+          },
+          :sagyotanto_name => {
+              :type => :grid,
+              :get => 'sagyotanto.user_name',
+              :sort => {
+                  :field => '`sagyotanto`.`user_name`',
+                  :joins => '`users` `sagyotanto`'
+              }
+          },
+          :rireki_dtm => {
+              :type => :logic,
+              :query => {
+                  :method => 'in_rireki'
+              }
+          },
+          :turikin => {
+              :type => :accessor,
+              :lazy => true
+          },
+          :vmanzenzaikosu => {
+              :type => :accessor,
+              :lazy => true
+          },
+          :vmcolumns => {
+              :association => :vmcolumns,
+              :lazy => true,
+              :mapping_override => {
+                  :group_no => {
+                      :type => :ignore
+                  }
+              }
+          }
+      }
+  )
 
-  def in_rireki
-    [
+  def self.in_rireki(condition_struct, options)
+    condition_struct.where([
         'rireki_kaisi_dtm <= :rireki_dtm AND rireki_syuryo_dtm >= :rireki_dtm',
         {
-            :rireki_dtm => Date.parse(params[:rirekiDtm]).to_s(:number)
+            :rireki_dtm => Date.parse(options[:params][:rireki_dtm]).to_s(:number)
         }
-    ]
+    ])
   end
 
   def get_customer
