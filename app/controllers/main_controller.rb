@@ -1,10 +1,6 @@
 # encoding: utf-8
 #系统登录跳转主页面
 class MainController < ApplicationController
-  #filter_access_to :all
-  #before_filter :authorize, :except => :login
-  #protect_from_forgery :except => :login
-
   def index
   end
 

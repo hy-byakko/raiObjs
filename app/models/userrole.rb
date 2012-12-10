@@ -4,8 +4,6 @@ class Userrole < ActiveRecord::Base
   belongs_to :role
   belongs_to :bumon
 
-
-   #用于返回拼装好的未同步自售机编号
   def get_user_name
     user_name = []
     username = User.find(:all,:conditions => ["id = :user_id", {:user_id => self.user_id}])

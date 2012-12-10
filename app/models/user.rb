@@ -8,35 +8,6 @@ class User < ActiveRecord::Base
   has_many :carnyukos
   has_many :userbumonchgs
 
-  def userkindlist(flag=true)
-    if flag
-        kind && kind.kind_name
-    else
-       {:include=>[:kind],:order=>"kinds.kind_name"}
-    end
-  end
-
-  def bumonlist(flag=true)
-    if flag
-      bumon && bumon.bumon_mei
-    else
-      {:include=>[:bumon],:order=>"bumons.bumon_mei"}
-    end
-  end
-
-  def [](type)
-    send type
-  end
-  
-#  def sex=(sex_str)
-#    sex_bool = (sex_str == '0') ? false : true
-#    write_attribute(:sex, sex_bool)
-#  end
-#
-#  def sex
-#    read_attribute(:sex) ? '1' : '0'
-#  end
-
   validates_uniqueness_of :user_cd, :case_sensitive => false
   validates :user_cd, :user_name, :bumon_id, :sex, :password, :presence => true
   validates :user_cd, :length =>{:maximum => 5}

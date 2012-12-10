@@ -15,11 +15,4 @@ class Kind < ActiveRecord::Base
   validates_length_of :kind_cd, :maximum => 2
   validates_length_of :kind_name, :maximum => 20
 
-  def kindcategorielist(flag=true)
-    if flag
-      kindcategorie && kindcategorie.kindcategory_name
-    else
-      {:include => [:kindcategorie], :order => "kindcategories.kindcategory_name"}
-    end
-  end
 end
